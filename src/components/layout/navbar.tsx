@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { logoutAction, switchDemoRole } from "@/lib/auth/actions";
+import { logoutAction } from "@/lib/auth/actions";
 import { AuthSession } from "@/lib/auth/session";
 
 export function Navbar({ session }: { session: AuthSession }) {
@@ -155,38 +155,6 @@ export function Navbar({ session }: { session: AuthSession }) {
                     </Link>
                   </div>
 
-                  {/* Quick role toggle for previewing student and admin perspectives */}
-                  <div className="border-t border-border/60 pt-2 pb-1 px-1">
-                    <p className="px-2 text-[10px] font-semibold uppercase text-muted-foreground tracking-wider mb-1">
-                      Quick Role Switch (Demo)
-                    </p>
-                    <div className="grid grid-cols-2 gap-1">
-                      <form action={() => switchDemoRole("student")}>
-                        <button
-                          type="submit"
-                          className={`w-full rounded-md px-2 py-1 text-xs text-center font-medium transition ${
-                            session.role === "student"
-                              ? "bg-secondary text-secondary-foreground"
-                              : "text-muted-foreground hover:bg-accent"
-                          }`}
-                        >
-                          Student
-                        </button>
-                      </form>
-                      <form action={() => switchDemoRole("admin")}>
-                        <button
-                          type="submit"
-                          className={`w-full rounded-md px-2 py-1 text-xs text-center font-medium transition ${
-                            session.role === "admin"
-                              ? "bg-primary text-primary-foreground"
-                              : "text-muted-foreground hover:bg-accent"
-                          }`}
-                        >
-                          Admin
-                        </button>
-                      </form>
-                    </div>
-                  </div>
 
                   <div className="border-t border-border/60 pt-1">
                     <form action={logoutAction}>

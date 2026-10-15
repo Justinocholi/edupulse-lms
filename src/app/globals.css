@@ -4,65 +4,65 @@
 
 @layer base {
   :root {
-    --background: 220 20% 98%;
-    --foreground: 222 47% 11%;
+    --background: 36 33% 97%; /* #FAF8F5 warm linen/stone surface */
+    --foreground: 140 10% 11%; /* #1A201C near-black ink */
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 140 10% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 140 10% 11%;
 
-    --primary: 239 84% 67%; /* #6366F1 / #4F46E5 */
-    --primary-foreground: 210 40% 98%;
+    --primary: 145 41% 22%; /* #214E34 mineral/forest green primary */
+    --primary-foreground: 36 33% 97%;
 
-    --secondary: 173 80% 40%; /* #14B8A6 / #0D9488 */
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 35 92% 46%; /* #E08709 amber accent */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 36 18% 92%;
+    --muted-foreground: 140 8% 42%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 36 22% 90%;
+    --accent-foreground: 140 10% 11%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 239 84% 67%;
+    --border: 36 15% 87%;
+    --input: 36 15% 87%;
+    --ring: 145 41% 22%;
 
     --radius: 0.75rem;
   }
 
   .dark {
-    --background: 224 71% 4%; /* #030712 deep obsidian navy */
-    --foreground: 210 40% 98%;
+    --background: 140 14% 8%; /* #111613 deep obsidian slate */
+    --foreground: 120 10% 96%; /* #F4F6F4 */
 
-    --card: 222 47% 7%; /* #0B1120 deep navy card */
-    --card-foreground: 210 40% 98%;
+    --card: 141 12% 11%; /* #18201B */
+    --card-foreground: 120 10% 96%;
 
-    --popover: 222 47% 7%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 141 12% 11%;
+    --popover-foreground: 120 10% 96%;
 
-    --primary: 239 84% 67%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 145 43% 38%; /* #348356 high-contrast mineral green */
+    --primary-foreground: 120 10% 96%;
 
-    --secondary: 173 80% 45%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 35 83% 51%; /* #E8961E warm amber */
+    --secondary-foreground: 140 14% 8%;
 
-    --muted: 217 33% 14%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 140 10% 15%;
+    --muted-foreground: 140 8% 65%;
 
-    --accent: 217 33% 14%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 140 10% 15%;
+    --accent-foreground: 120 10% 96%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 239 84% 67%;
+    --border: 140 12% 18%;
+    --input: 140 12% 18%;
+    --ring: 145 43% 38%;
   }
 }
 

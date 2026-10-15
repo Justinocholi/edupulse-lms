@@ -7,19 +7,37 @@ import { Sparkles, Loader2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { resetPasswordAction } from "@/lib/auth/actions";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
+  const [password, setPassword] = React.useState("");
+  const [confirmPassword, setConfirmPassword] = React.useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const formData = new FormData();
+      formData.append("password", password);
+      formData.append("confirmPassword", confirmPassword);
+      const res = await resetPasswordAction(formData);
+      if (res.success) {
+        toast.success("Password updated successfully. Please sign in.");
+        router.push("/login");
+      } else {
+        toast.error(res.error || "Failed to update password.");
+      }
+    } catch {
+      toast.error("An unexpected error occurred.");
+    } finally {
       setLoading(false);
-      toast.success("Password updated successfully. Please sign in.");
-      router.push("/login");
-    }, 600);
+    }
   };
 
   return (
@@ -46,12 +64,24 @@ export default function ResetPasswordPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-foreground">New Password</label>
-              <Input type="password" required placeholder="Min. 8 characters" />
+              <Input
+                type="password"
+                required
+                placeholder="Min. 8 characters"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
 
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-foreground">Confirm New Password</label>
-              <Input type="password" required placeholder="••••••••" />
+              <Input
+                type="password"
+                required
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
             </div>
 
             <Button

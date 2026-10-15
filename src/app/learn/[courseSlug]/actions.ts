@@ -20,6 +20,32 @@ export async function toggleLessonCompletionAction(lessonId: string, courseId: s
   }
 }
 
+export async function savePlaybackPositionAction(
+  lessonId: string,
+  courseId: string,
+  playbackPositionSeconds: number,
+  timeSpentSeconds?: number
+) {
+  const session = await getCurrentSession();
+  if (!session.user) {
+    return { success: false, error: "Authentication required" };
+  }
+
+  try {
+    const result = await dataStore.markLessonProgress(
+      session.user.id,
+      lessonId,
+      courseId,
+      undefined,
+      timeSpentSeconds,
+      playbackPositionSeconds
+    );
+    return { success: true, progress: result.progress };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to save playback position" };
+  }
+}
+
 export async function submitQuizAction(quizId: string, courseId: string, answers: Record<string, string>) {
   const session = await getCurrentSession();
   if (!session.user) {

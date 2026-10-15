@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { dataStore, isSupabaseConfigured } from "@/lib/db/data-store";
+import { dataStore, isSupabaseConfigured, isTestMode } from "@/lib/db/data-store";
 import { UserRole } from "@/types";
 
 export interface AuthSession {
@@ -17,15 +17,16 @@ export interface AuthSession {
 export async function getCurrentSession(): Promise<AuthSession> {
   const cookieStore = cookies();
 
-  // If live Supabase is configured, read real Supabase auth session
-  if (isSupabaseConfigured()) {
+  // Primary: Live Supabase Auth Engine with Server-Verified Session
+  if (isSupabaseConfigured() && !isTestMode()) {
     try {
       const supabase = createClient();
       const {
         data: { user },
+        error,
       } = await supabase.auth.getUser();
 
-      if (!user) {
+      if (error || !user) {
         return { user: null, role: null };
       }
 
@@ -42,41 +43,34 @@ export async function getCurrentSession(): Promise<AuthSession> {
         role,
       };
     } catch {
-      // fallback to cookie session
+      return { user: null, role: null };
     }
   }
 
-  // Fallback cookie-based session for zero-config demonstration & testing
-  const authCookie = cookieStore.get("edupulse-session")?.value;
-
-  if (!authCookie) {
-    // Default to student demo session for immediate interactive preview
-    return {
-      user: {
-        id: "10000001-0000-0000-0000-000000000004",
-        email: "student@edupulse.io",
-        full_name: "Alex Rivera",
-        avatar_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80",
-      },
-      role: "student",
-    };
+  // Hermetic test harness for isolated automated test runs
+  if (isTestMode()) {
+    const authCookie = cookieStore.get("edupulse-test-session")?.value;
+    if (authCookie) {
+      try {
+        const parsed = JSON.parse(authCookie);
+        const role = await dataStore.getUserRole(parsed.id);
+        return {
+          user: {
+            id: parsed.id,
+            email: parsed.email,
+            full_name: parsed.full_name || "Learner",
+            avatar_url: parsed.avatar_url,
+          },
+          role: role || parsed.role || "student",
+        };
+      } catch {
+        return { user: null, role: null };
+      }
+    }
   }
 
-  try {
-    const parsed = JSON.parse(authCookie);
-    const role = (await dataStore.getUserRole(parsed.id)) || parsed.role || "student";
-    return {
-      user: {
-        id: parsed.id,
-        email: parsed.email,
-        full_name: parsed.full_name || "Learner",
-        avatar_url: parsed.avatar_url,
-      },
-      role,
-    };
-  } catch {
-    return { user: null, role: null };
-  }
+  // Unauthenticated visitor
+  return { user: null, role: null };
 }
 
 export async function requireAuth(): Promise<AuthSession> {

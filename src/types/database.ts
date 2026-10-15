@@ -264,3 +264,24 @@ export interface AuditLog {
   created_at: string;
   user?: Profile;
 }
+
+export interface Announcement {
+  id: string;
+  title: string;
+  content: string;
+  course_id?: string | null;
+  is_published: boolean;
+  published_at: string;
+  created_by?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PlatformSettings {
+  platform_name: string;
+  support_email: string;
+  allow_public_registration: boolean;
+  default_currency: string;
+  certificate_prefix: string;
+}
+

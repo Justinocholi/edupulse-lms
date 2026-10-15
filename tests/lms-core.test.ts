@@ -224,4 +224,109 @@ describe("EduPulse LMS Critical Business Logic & Security Tests", () => {
     });
     expect(res1.success).toBe(false);
   });
+
+  // 11. Protection of the Last Administrator
+  it("prevents demoting the last remaining platform administrator", async () => {
+    const adminId = "10000001-0000-0000-0000-000000000003";
+
+    await expect(
+      dataStore.updateUserRole(adminId, adminId, "student")
+    ).rejects.toThrow("Cannot demote the sole remaining administrator on the platform");
+  });
+
+  // 12. Video Playback Position & Time Spent Persistence
+  it("records and updates video playback position and accumulated time spent", async () => {
+    const studentId = "learner-playback-test";
+    const courseId = "a0000001-0000-0000-0000-000000000001";
+    const lessonId = "40000001-0000-0000-0000-000000000001";
+
+    await dataStore.enrollUser(studentId, courseId);
+
+    // Save playback position at 125 seconds, spent 120 seconds
+    const res1 = await dataStore.markLessonProgress(
+      studentId,
+      lessonId,
+      courseId,
+      false, // not yet marked completed
+      120,   // time spent
+      125    // playback position
+    );
+
+    expect(res1.progress.last_playback_position_seconds).toBe(125);
+    expect(res1.progress.time_spent_seconds).toBe(120);
+    expect(res1.progress.is_completed).toBe(false);
+
+    // Now user finishes video and marks complete, saving position at 300 seconds
+    const res2 = await dataStore.markLessonProgress(
+      studentId,
+      lessonId,
+      courseId,
+      true,  // completed
+      180,   // additional time spent
+      300    // new position
+    );
+
+    expect(res2.progress.is_completed).toBe(true);
+    expect(res2.progress.last_playback_position_seconds).toBe(300);
+    expect(res2.progress.time_spent_seconds).toBe(300);
+  });
+
+  // 13. Course Lifecycle & Audit Trail
+  it("manages course lifecycle (draft -> published -> archived) and records audit logs", async () => {
+    const adminId = "10000001-0000-0000-0000-000000000003";
+
+    // Create course
+    const course = await dataStore.createCourse(
+      {
+        title: "Microservices Security and OAuth2",
+        slug: "microservices-security-oauth2",
+        description: "Hands-on implementation of OAuth2, OpenID Connect, and JWT security tokens.",
+        difficulty: "intermediate",
+        status: "draft",
+        is_free: false,
+        price: 99,
+      },
+      adminId
+    );
+    expect(course.status).toBe("draft");
+
+    // Publish
+    const published = await dataStore.updateCourse(course.id, { status: "published" }, adminId);
+    expect(published?.status).toBe("published");
+
+    // Archive
+    const archived = await dataStore.updateCourse(course.id, { status: "archived" }, adminId);
+    expect(archived?.status).toBe("archived");
+
+    // Archived course should not appear in default public catalog
+    const publicList = await dataStore.getCourses();
+    expect(publicList.some((c) => c.id === course.id)).toBe(false);
+
+    // Verify audit logs were created
+    const logs = await dataStore.getAuditLogs();
+    const courseLogs = logs.filter((l) => l.entity_id === course.id);
+    expect(courseLogs.length).toBeGreaterThan(0);
+  });
+
+  // 14. Platform Settings Persistence
+  it("persists global platform configuration and updates platform name and email", async () => {
+    const adminId = "10000001-0000-0000-0000-000000000003";
+
+    const initialSettings = await dataStore.getPlatformSettings();
+    expect(initialSettings.platform_name).toBeDefined();
+
+    const updated = await dataStore.updatePlatformSettings(
+      {
+        platform_name: "EduPulse Global Academy",
+        support_email: "dean@edupulse.io",
+      },
+      adminId
+    );
+
+    expect(updated.platform_name).toBe("EduPulse Global Academy");
+    expect(updated.support_email).toBe("dean@edupulse.io");
+
+    const reloaded = await dataStore.getPlatformSettings();
+    expect(reloaded.platform_name).toBe("EduPulse Global Academy");
+  });
 });

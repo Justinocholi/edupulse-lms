@@ -84,6 +84,9 @@ export function LessonPlayer({
   // Access check: unenrolled users can ONLY view is_preview lessons (or admins)
   const hasAccess = isEnrolled || isAdmin || activeLesson?.is_preview;
 
+  const quizLesson = allLessons.find((l) => l.content_type === "quiz");
+  const defaultQuizId = quizLesson?.quiz?.id || "50000001-0000-0000-0000-000000000001";
+
   const handleToggleComplete = async () => {
     if (!activeLesson) return;
     if (!isEnrolled && !isAdmin) {
@@ -100,6 +103,11 @@ export function LessonPlayer({
       if (res.success) {
         if (nextCompleted) {
           toast.success("Lesson marked as complete!");
+          if (nextLesson) {
+            setTimeout(() => {
+              setActiveLessonId(nextLesson.id);
+            }, 800);
+          }
         }
       } else {
         // Rollback
@@ -203,7 +211,7 @@ export function LessonPlayer({
                     Achieve the passing threshold to earn your verified credential and complete this masterclass.
                   </p>
                   <div className="pt-2">
-                    <Link href={`/learn/${course.slug}/quiz/50000001-0000-0000-0000-000000000001`}>
+                    <Link href={`/learn/${course.slug}/quiz/${activeLesson?.quiz?.id || defaultQuizId}`}>
                       <Button variant="gradient" size="lg" className="rounded-xl px-8">
                         Launch Interactive Assessment Exam →
                       </Button>
@@ -280,7 +288,7 @@ export function LessonPlayer({
                     <ChevronRight className="ml-1 h-4 w-4" />
                   </Button>
                 ) : (
-                  <Link href={`/learn/${course.slug}/quiz/50000001-0000-0000-0000-000000000001`}>
+                  <Link href={`/learn/${course.slug}/quiz/${defaultQuizId}`}>
                     <Button variant="gradient" className="rounded-xl text-xs">
                       Take Final Exam →
                     </Button>

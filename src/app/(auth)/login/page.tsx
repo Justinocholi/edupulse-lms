@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Sparkles, Loader2, ArrowRight, ShieldCheck, User } from "lucide-react";
+import { Sparkles, Loader2, ArrowRight } from "lucide-react";
 import { loginSchema, LoginInput } from "@/lib/validations/auth";
-import { loginAction, switchDemoRole } from "@/lib/auth/actions";
+import { loginAction } from "@/lib/auth/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -25,10 +25,6 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "student@edupulse.io",
-      password: "Password123!",
-    },
   });
 
   const onSubmit = async (data: LoginInput) => {
@@ -72,34 +68,6 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* Demo Quick Logins */}
-        <div className="rounded-xl border border-border bg-muted/40 p-3 space-y-2">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground text-center">
-            One-Click Demo Credentials
-          </p>
-          <div className="grid grid-cols-2 gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => switchDemoRole("student")}
-              className="text-xs font-semibold justify-start"
-            >
-              <User className="mr-1.5 h-3.5 w-3.5 text-teal-500" />
-              Demo Student
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => switchDemoRole("admin")}
-              className="text-xs font-semibold justify-start"
-            >
-              <ShieldCheck className="mr-1.5 h-3.5 w-3.5 text-brand-500" />
-              Demo Admin
-            </Button>
-          </div>
-        </div>
 
         {/* Form Card */}
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">

@@ -78,7 +78,7 @@ export default async function StudentAssessmentsPage() {
                 </div>
 
                 <div className="shrink-0">
-                  <Link href={`/learn/enterprise-nextjs-supabase-architecture/quiz/${quiz.id}`}>
+                  <Link href={`/learn/${course?.slug || "enterprise-nextjs-supabase-architecture"}/quiz/${quiz.id}`}>
                     <Button variant="gradient" size="sm" className="rounded-xl px-5">
                       Start Assessment
                       <ArrowRight className="ml-2 h-4 w-4" />

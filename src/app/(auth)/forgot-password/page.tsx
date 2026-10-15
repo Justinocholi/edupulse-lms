@@ -6,19 +6,31 @@ import { Sparkles, Loader2, ArrowRight, MoveLeft, CheckCircle2 } from "lucide-re
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { forgotPasswordAction } from "@/lib/auth/actions";
 
 export default function ForgotPasswordPage() {
   const [loading, setLoading] = React.useState(false);
   const [sent, setSent] = React.useState(false);
+  const [email, setEmail] = React.useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const formData = new FormData();
+      formData.append("email", email);
+      const res = await forgotPasswordAction(formData);
+      if (res.success) {
+        setSent(true);
+        toast.success("Password reset instructions dispatched to your email.");
+      } else {
+        toast.error(res.error || "Failed to dispatch recovery link.");
+      }
+    } catch {
+      toast.error("An unexpected error occurred.");
+    } finally {
       setLoading(false);
-      setSent(true);
-      toast.success("Password reset instructions dispatched to your email.");
-    }, 600);
+    }
   };
 
   return (
@@ -60,7 +72,13 @@ export default function ForgotPasswordPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-foreground">Email Address</label>
-                <Input type="email" required placeholder="name@company.com" />
+                <Input
+                  type="email"
+                  required
+                  placeholder="name@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </div>
 
               <Button
