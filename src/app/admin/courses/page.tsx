@@ -72,8 +72,29 @@ export default async function AdminCoursesPage() {
 
       {/* Courses Table Card */}
       <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+        {courses.length === 0 ? (
+          <div className="p-12 text-center space-y-4">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
+              <BookOpen className="h-7 w-7" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-heading text-lg font-bold text-foreground">Course Catalog is Empty</h3>
+              <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+                All demo courses have been removed. You have a clean slate to create and publish your first official masterclass!
+              </p>
+            </div>
+            <div className="pt-2">
+              <Link href="/admin/courses/new">
+                <Button variant="gradient" size="sm" className="rounded-xl">
+                  <PlusCircle className="mr-1.5 h-4 w-4" />
+                  Create Your First Masterclass
+                </Button>
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
             <thead className="bg-muted/50 border-b border-border/80 text-muted-foreground font-semibold uppercase tracking-wider text-[11px]">
               <tr>
                 <th className="p-4">Course</th>
@@ -226,6 +247,7 @@ export default async function AdminCoursesPage() {
             </tbody>
           </table>
         </div>
+        )}
       </div>
     </div>
   );

@@ -221,11 +221,30 @@ export default async function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredCourses.slice(0, 3).map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
+          {featuredCourses.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredCourses.slice(0, 3).map((course) => (
+                <CourseCard key={course.id} course={course} />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-dashed border-border p-12 text-center space-y-3 bg-card/60">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500/10 text-brand-600 dark:text-brand-400">
+                <Sparkles className="h-6 w-6" />
+              </div>
+              <h3 className="font-heading text-lg font-bold text-foreground">Catalog Curations in Progress</h3>
+              <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+                No published courses yet. Administrators can create and publish new masterclasses directly from the control console.
+              </p>
+              <div className="pt-2">
+                <Link href="/admin/courses/new">
+                  <Button variant="gradient" size="sm" className="rounded-xl">
+                    Create Masterclass
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

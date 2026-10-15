@@ -741,12 +741,17 @@ export const dataStore = {
 
       const { data, error } = await query;
       if (error) throw new Error(`Failed to fetch courses: ${error.message}`);
-      return (data || []) as Course[];
+      // Remove all demo courses
+      const nonDemo = ((data || []) as Course[]).filter((c) => !c.id.startsWith("a0000001-"));
+      return nonDemo;
     }
 
     if (!isTestMode()) throw new SupabaseConfigurationError();
 
     let list = [...db.courses];
+    if (!isTestMode()) {
+      list = list.filter((c) => !c.id.startsWith("a0000001-"));
+    }
     if (!filters?.includeDrafts) {
       list = list.filter((c) => c.status === "published");
     } else if (filters?.status) {
@@ -780,6 +785,7 @@ export const dataStore = {
       const { data, error } = await query.maybeSingle();
       if (error) throw new Error(`Failed to fetch course: ${error.message}`);
       if (!data) return null;
+      if (!isTestMode() && data.id.startsWith("a0000001-")) return null;
 
       // Sort nested modules and lessons
       if (data.modules) {
@@ -802,6 +808,7 @@ export const dataStore = {
 
     const course = db.courses.find((c) => c.slug === slug);
     if (!course) return null;
+    if (!isTestMode() && course.id.startsWith("a0000001-")) return null;
     if (!options?.includeDrafts && course.status !== "published") return null;
     const category = db.categories.find((c) => c.id === course.category_id) || null;
     const courseModules = db.modules
@@ -826,6 +833,7 @@ export const dataStore = {
   },
 
   async getCourseById(id: string): Promise<Course | null> {
+    if (!isTestMode() && id.startsWith("a0000001-")) return null;
     if (isSupabaseConfigured() && !isTestMode()) {
       const supabase = getSupabase()!;
       const { data, error } = await supabase
@@ -835,6 +843,7 @@ export const dataStore = {
         .maybeSingle();
       if (error) throw new Error(`Failed to fetch course by ID: ${error.message}`);
       if (!data) return null;
+      if (data.id.startsWith("a0000001-")) return null;
 
       if (data.modules) {
         data.modules.sort((a: any, b: any) => a.sort_order - b.sort_order);
@@ -856,6 +865,7 @@ export const dataStore = {
 
     const course = db.courses.find((c) => c.id === id);
     if (!course) return null;
+    if (!isTestMode() && course.id.startsWith("a0000001-")) return null;
     const category = db.categories.find((c) => c.id === course.category_id) || null;
     const courseModules = db.modules
       .filter((m) => m.course_id === course.id)
@@ -2374,10 +2384,12 @@ export const dataStore = {
       ]);
 
       const totalUsers = usersRes.count || 0;
-      const allCourses = coursesRes.data || [];
+      const allCourses = (coursesRes.data || []).filter((c) => !c.id.startsWith("a0000001-"));
       const publishedCourses = allCourses.filter((c) => c.status === "published").length;
       const draftCourses = allCourses.filter((c) => c.status === "draft").length;
-      const allEnrollments = enrollmentsRes.data || [];
+      const allEnrollments = (enrollmentsRes.data || []).filter(
+        (e) => !e.course_id.startsWith("a0000001-")
+      );
       const totalEnrollments = allEnrollments.length;
       const completedCount = allEnrollments.filter((e) => e.status === "completed").length;
       const completionRate = totalEnrollments > 0 ? Math.round((completedCount / totalEnrollments) * 100) : 0;
@@ -2391,50 +2403,55 @@ export const dataStore = {
         totalEnrollments,
         completionRate,
         enrollmentTrends: [
-          { date: "Oct 10", enrollments: Math.max(1, Math.round(totalEnrollments * 0.2)) },
-          { date: "Oct 11", enrollments: Math.max(2, Math.round(totalEnrollments * 0.35)) },
-          { date: "Oct 12", enrollments: Math.max(3, Math.round(totalEnrollments * 0.55)) },
-          { date: "Oct 13", enrollments: Math.max(4, Math.round(totalEnrollments * 0.75)) },
-          { date: "Oct 14", enrollments: Math.max(5, Math.round(totalEnrollments * 0.9)) },
+          { date: "Oct 10", enrollments: Math.max(0, Math.round(totalEnrollments * 0.2)) },
+          { date: "Oct 11", enrollments: Math.max(0, Math.round(totalEnrollments * 0.35)) },
+          { date: "Oct 12", enrollments: Math.max(0, Math.round(totalEnrollments * 0.55)) },
+          { date: "Oct 13", enrollments: Math.max(0, Math.round(totalEnrollments * 0.75)) },
+          { date: "Oct 14", enrollments: Math.max(0, Math.round(totalEnrollments * 0.9)) },
           { date: "Oct 15", enrollments: totalEnrollments },
         ],
-        popularCourses: [
-          { id: "c1", title: "Enterprise Next.js 14 Architecture", count: totalEnrollments, category: "Web Dev" },
-        ],
+        popularCourses: allCourses.slice(0, 3).map((c) => ({
+          id: c.id,
+          title: (c as any).title || "Course",
+          count: allEnrollments.filter((e) => e.course_id === c.id).length,
+          category: "Technology",
+        })),
       };
     }
 
     if (!isTestMode()) throw new SupabaseConfigurationError();
 
+    const validCourses = isTestMode() ? db.courses : db.courses.filter((c) => !c.id.startsWith("a0000001-"));
+    const validEnrollments = isTestMode() ? db.enrollments : db.enrollments.filter((e) => !e.course_id.startsWith("a0000001-"));
     const totalUsers = db.profiles.length;
-    const totalCourses = db.courses.length;
-    const publishedCourses = db.courses.filter((c) => c.status === "published").length;
-    const draftCourses = db.courses.filter((c) => c.status === "draft").length;
-    const totalEnrollments = db.enrollments.length;
-    const completedCount = db.enrollments.filter((e) => e.status === "completed").length;
-    const completionRate = totalEnrollments > 0 ? Math.round((completedCount / totalEnrollments) * 100) : 78;
+    const totalCourses = validCourses.length;
+    const publishedCourses = validCourses.filter((c) => c.status === "published").length;
+    const draftCourses = validCourses.filter((c) => c.status === "draft").length;
+    const totalEnrollments = validEnrollments.length;
+    const completedCount = validEnrollments.filter((e) => e.status === "completed").length;
+    const completionRate = totalEnrollments > 0 ? Math.round((completedCount / totalEnrollments) * 100) : (isTestMode() ? 78 : 0);
 
     return {
       totalUsers,
-      activeUsers: 342,
+      activeUsers: isTestMode() ? 342 : totalUsers,
       totalCourses,
       publishedCourses,
       draftCourses,
-      totalEnrollments: totalEnrollments || 1240,
+      totalEnrollments,
       completionRate,
       enrollmentTrends: [
-        { date: "Mon", enrollments: 32 },
-        { date: "Tue", enrollments: 45 },
-        { date: "Wed", enrollments: 58 },
-        { date: "Thu", enrollments: 72 },
-        { date: "Fri", enrollments: 64 },
-        { date: "Sat", enrollments: 89 },
-        { date: "Sun", enrollments: 104 },
+        { date: "Mon", enrollments: Math.round(totalEnrollments * 0.1) },
+        { date: "Tue", enrollments: Math.round(totalEnrollments * 0.2) },
+        { date: "Wed", enrollments: Math.round(totalEnrollments * 0.4) },
+        { date: "Thu", enrollments: Math.round(totalEnrollments * 0.6) },
+        { date: "Fri", enrollments: Math.round(totalEnrollments * 0.8) },
+        { date: "Sat", enrollments: Math.round(totalEnrollments * 0.9) },
+        { date: "Sun", enrollments: totalEnrollments },
       ],
-      popularCourses: db.courses.slice(0, 3).map((c) => ({
+      popularCourses: validCourses.slice(0, 3).map((c) => ({
         id: c.id,
         title: c.title,
-        count: c.enrollment_count || 120,
+        count: c.enrollment_count || 0,
         category: "Technology",
       })),
     };
