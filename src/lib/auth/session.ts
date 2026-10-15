@@ -30,7 +30,23 @@ export async function getCurrentSession(): Promise<AuthSession> {
         return { user: null, role: null };
       }
 
-      const role = await dataStore.getUserRole(user.id);
+      let role: UserRole | null = null;
+      try {
+        const { data: roleRow } = await supabase
+          .from("user_roles")
+          .select("role")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (roleRow?.role) {
+          role = roleRow.role as UserRole;
+        }
+      } catch {
+        // Fallback to dataStore if direct query errors
+      }
+
+      if (!role) {
+        role = await dataStore.getUserRole(user.id);
+      }
       const profile = await dataStore.getProfile(user.id);
 
       return {

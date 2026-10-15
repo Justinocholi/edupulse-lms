@@ -162,6 +162,28 @@ export async function deleteModuleAction(courseId: string, moduleId: string) {
   }
 }
 
+export async function updateModuleAction(courseId: string, moduleId: string, title: string, description?: string) {
+  await requireAdmin();
+  try {
+    const updated = await dataStore.updateModule(moduleId, { title, description });
+    revalidatePath(`/admin/courses/${courseId}/builder`);
+    return { success: true, module: updated };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+export async function reorderModulesAction(courseId: string, orderedModuleIds: string[]) {
+  await requireAdmin();
+  try {
+    await dataStore.reorderModules(courseId, orderedModuleIds);
+    revalidatePath(`/admin/courses/${courseId}/builder`);
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
 export async function createLessonAction(courseId: string, moduleId: string, data: any) {
   await requireAdmin();
   try {
@@ -173,10 +195,32 @@ export async function createLessonAction(courseId: string, moduleId: string, dat
   }
 }
 
+export async function updateLessonAction(courseId: string, lessonId: string, data: any) {
+  await requireAdmin();
+  try {
+    const updated = await dataStore.updateLesson(lessonId, data);
+    revalidatePath(`/admin/courses/${courseId}/builder`);
+    return { success: true, lesson: updated };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
 export async function deleteLessonAction(courseId: string, lessonId: string) {
   await requireAdmin();
   try {
     await dataStore.deleteLesson(lessonId);
+    revalidatePath(`/admin/courses/${courseId}/builder`);
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+export async function reorderLessonsAction(courseId: string, moduleId: string, orderedLessonIds: string[]) {
+  await requireAdmin();
+  try {
+    await dataStore.reorderLessons(moduleId, orderedLessonIds);
     revalidatePath(`/admin/courses/${courseId}/builder`);
     return { success: true };
   } catch (err: any) {

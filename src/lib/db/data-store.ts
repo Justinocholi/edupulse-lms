@@ -35,9 +35,12 @@ export function isTestMode(): boolean {
 
 export function getSupabase() {
   if (!isSupabaseConfigured()) return null;
+  const key =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
   return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    key
   );
 }
 
@@ -1115,6 +1118,27 @@ export const dataStore = {
     return true;
   },
 
+  async reorderModules(courseId: string, orderedModuleIds: string[]): Promise<boolean> {
+    if (isSupabaseConfigured() && !isTestMode()) {
+      const supabase = getSupabase()!;
+      for (let i = 0; i < orderedModuleIds.length; i++) {
+        await supabase
+          .from("modules")
+          .update({ sort_order: i + 1, updated_at: new Date().toISOString() })
+          .eq("id", orderedModuleIds[i]);
+      }
+      return true;
+    }
+
+    if (!isTestMode()) throw new SupabaseConfigurationError();
+
+    orderedModuleIds.forEach((id, index) => {
+      const mod = db.modules.find((m) => m.id === id);
+      if (mod) mod.sort_order = index + 1;
+    });
+    return true;
+  },
+
   async createLesson(moduleId: string, data: Partial<Lesson>): Promise<Lesson> {
     const id = (typeof crypto !== "undefined" && crypto.randomUUID) ? crypto.randomUUID() : `les-${Date.now()}`;
     const slug = data.slug || (data.title || "new-lesson").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -1209,6 +1233,27 @@ export const dataStore = {
     if (!isTestMode()) throw new SupabaseConfigurationError();
 
     db.lessons = db.lessons.filter((l) => l.id !== lessonId);
+    return true;
+  },
+
+  async reorderLessons(moduleId: string, orderedLessonIds: string[]): Promise<boolean> {
+    if (isSupabaseConfigured() && !isTestMode()) {
+      const supabase = getSupabase()!;
+      for (let i = 0; i < orderedLessonIds.length; i++) {
+        await supabase
+          .from("lessons")
+          .update({ sort_order: i + 1, updated_at: new Date().toISOString() })
+          .eq("id", orderedLessonIds[i]);
+      }
+      return true;
+    }
+
+    if (!isTestMode()) throw new SupabaseConfigurationError();
+
+    orderedLessonIds.forEach((id, index) => {
+      const les = db.lessons.find((l) => l.id === id);
+      if (les) les.sort_order = index + 1;
+    });
     return true;
   },
 
@@ -2083,6 +2128,51 @@ export const dataStore = {
     };
     db.reviews.push(review);
     return review;
+  },
+
+  async getAllReviews(): Promise<any[]> {
+    if (isSupabaseConfigured() && !isTestMode()) {
+      const supabase = getSupabase()!;
+      const { data, error } = await supabase
+        .from("course_reviews")
+        .select("*, user:profiles(id, full_name, email, avatar_url), course:courses(id, title, slug)")
+        .order("created_at", { ascending: false });
+      if (error) throw new Error(`Failed to fetch reviews: ${error.message}`);
+      return data || [];
+    }
+
+    if (!isTestMode()) throw new SupabaseConfigurationError();
+
+    return db.reviews.map((r) => {
+      const user = db.profiles.find((p) => p.id === r.user_id);
+      const course = db.courses.find((c) => c.id === r.course_id);
+      return {
+        ...r,
+        user,
+        course: course ? { id: course.id, title: course.title, slug: course.slug } : undefined,
+      };
+    });
+  },
+
+  async deleteReview(reviewId: string): Promise<boolean> {
+    if (isSupabaseConfigured() && !isTestMode()) {
+      const supabase = getSupabase()!;
+      const { error } = await supabase
+        .from("course_reviews")
+        .delete()
+        .eq("id", reviewId);
+      if (error) throw new Error(`Failed to delete review: ${error.message}`);
+      return true;
+    }
+
+    if (!isTestMode()) throw new SupabaseConfigurationError();
+
+    const idx = db.reviews.findIndex((r) => r.id === reviewId);
+    if (idx !== -1) {
+      db.reviews.splice(idx, 1);
+      return true;
+    }
+    return false;
   },
 
   // NOTIFICATIONS

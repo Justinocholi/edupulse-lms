@@ -10,6 +10,12 @@ export async function toggleLessonCompletionAction(lessonId: string, courseId: s
     return { success: false, error: "Authentication required" };
   }
 
+  // Server-side authorization: verify user is enrolled or platform admin
+  const enrollment = await dataStore.getUserEnrollment(session.user.id, courseId);
+  if (!enrollment && session.role !== "admin") {
+    return { success: false, error: "Active enrollment required to record progress" };
+  }
+
   try {
     const result = await dataStore.markLessonProgress(session.user.id, lessonId, courseId, isCompleted);
     revalidatePath(`/learn`);
@@ -31,6 +37,12 @@ export async function savePlaybackPositionAction(
     return { success: false, error: "Authentication required" };
   }
 
+  // Server-side authorization: verify user is enrolled or platform admin
+  const enrollment = await dataStore.getUserEnrollment(session.user.id, courseId);
+  if (!enrollment && session.role !== "admin") {
+    return { success: false, error: "Active enrollment required to record progress" };
+  }
+
   try {
     const result = await dataStore.markLessonProgress(
       session.user.id,
@@ -50,6 +62,12 @@ export async function submitQuizAction(quizId: string, courseId: string, answers
   const session = await getCurrentSession();
   if (!session.user) {
     return { success: false, error: "Authentication required" };
+  }
+
+  // Server-side authorization: verify user is enrolled or platform admin
+  const enrollment = await dataStore.getUserEnrollment(session.user.id, courseId);
+  if (!enrollment && session.role !== "admin") {
+    return { success: false, error: "Active enrollment required to submit assessment" };
   }
 
   try {
