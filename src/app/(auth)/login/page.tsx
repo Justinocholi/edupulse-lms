@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Sparkles, Loader2, ArrowRight } from "lucide-react";
@@ -13,7 +13,6 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
 export default function LoginPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const nextUrl = searchParams.get("next") || "/dashboard";
 
@@ -22,16 +21,10 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
   });
-
-  const fillAdminCredentials = () => {
-    setValue("email", "admin@edupulse.io");
-    setValue("password", "Admin12345!");
-  };
 
   const onSubmit = async (data: LoginInput) => {
     try {
@@ -46,7 +39,7 @@ export default function LoginPage() {
         toast.success("Welcome back!");
         window.location.href = res.redirectTo || nextUrl;
       } else {
-        toast.error(res.error || "Login failed");
+        toast.error(res.error || "Login failed. Please check your credentials.");
       }
     } catch {
       toast.error("An unexpected error occurred during login.");
@@ -74,29 +67,6 @@ export default function LoginPage() {
           </p>
         </div>
 
-        {/* 1-Click Instant Admin Access Banner */}
-        <div className="rounded-2xl border border-brand-500/30 bg-brand-500/5 p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-              <Sparkles className="h-4 w-4 text-brand-600 dark:text-brand-400" />
-              Instant Administrator Access
-            </span>
-            <span className="text-[10px] font-mono rounded bg-brand-500/20 px-2 py-0.5 text-brand-700 dark:text-brand-300 font-semibold">
-              1-Click
-            </span>
-          </div>
-          <p className="text-[11px] text-muted-foreground">
-            Bypass typing credentials and enter the admin dashboard directly with full platform privileges:
-          </p>
-          <a
-            href={`/api/auth/admin-login?next=${encodeURIComponent(nextUrl.startsWith("/admin") ? nextUrl : "/admin")}`}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 hover:bg-brand-700 text-white px-4 py-2.5 text-xs font-bold shadow-md transition-all active:scale-[0.99]"
-          >
-            <span>⚡ Enter Admin Dashboard (1-Click)</span>
-            <ArrowRight className="h-3.5 w-3.5" />
-          </a>
-        </div>
-
         {/* Form Card */}
         <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -105,6 +75,7 @@ export default function LoginPage() {
               <Input
                 type="email"
                 placeholder="name@company.com"
+                autoComplete="email"
                 {...register("email")}
               />
               {errors.email && (
@@ -125,22 +96,12 @@ export default function LoginPage() {
               <Input
                 type="password"
                 placeholder="••••••••"
+                autoComplete="current-password"
                 {...register("password")}
               />
               {errors.password && (
                 <p className="text-xs text-destructive">{errors.password.message}</p>
               )}
-            </div>
-
-            <div className="flex items-center justify-between text-[11px] text-muted-foreground pt-1">
-              <span>Testing Admin?</span>
-              <button
-                type="button"
-                onClick={fillAdminCredentials}
-                className="font-semibold text-brand-600 dark:text-brand-400 hover:underline"
-              >
-                Auto-fill admin@edupulse.io
-              </button>
             </div>
 
             <Button

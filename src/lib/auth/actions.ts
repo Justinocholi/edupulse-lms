@@ -28,15 +28,10 @@ export async function loginAction(formData: FormData): Promise<AuthActionResult>
 
   const { email, password } = parsed.data;
 
-  // Dedicated administrator login handling with reliable session cookie
+  // Dedicated administrator login — only the two configured passwords are accepted
   if (
     email.toLowerCase() === "admin@edupulse.io" &&
-    (password === "Admin12345!" ||
-      password === "EduPulseAdmin2026!" ||
-      password === "admin" ||
-      password === "admin123" ||
-      password === "password" ||
-      password.toLowerCase().includes("admin"))
+    (password === "Admin12345!" || password === "EduPulseAdmin2026!")
   ) {
     const cookieStore = cookies();
     cookieStore.set(
@@ -58,7 +53,7 @@ export async function loginAction(formData: FormData): Promise<AuthActionResult>
       }
     );
 
-    // Also attempt Supabase sign in if configured
+    // Also attempt Supabase sign in if configured (keeps Supabase session in sync)
     if (isSupabaseConfigured() && !isTestMode()) {
       try {
         const supabase = createClient();
