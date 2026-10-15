@@ -157,15 +157,13 @@ export function Navbar({ session }: { session: AuthSession }) {
 
 
                   <div className="border-t border-border/60 pt-1">
-                    <form action={logoutAction}>
-                      <button
-                        type="submit"
-                        className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-destructive hover:bg-destructive/10"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        Sign Out
-                      </button>
-                    </form>
+                    <Link
+                      href="/logout"
+                      className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-destructive hover:bg-destructive/10 font-medium"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Sign Out
+                    </Link>
                   </div>
                 </div>
               )}

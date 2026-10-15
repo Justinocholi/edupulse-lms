@@ -15,6 +15,7 @@ import {
   Sliders,
   ChevronRight,
   ExternalLink,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -94,6 +95,15 @@ export function AdminSidebar() {
             <span>Student Dashboard</span>
             <ExternalLink className="h-3.5 w-3.5" />
           </Link>
+          <div className="pt-2 border-t border-border/60">
+            <Link
+              href="/logout"
+              className="flex items-center gap-2 text-xs text-destructive hover:bg-destructive/10 px-2 py-1.5 rounded-lg transition-colors font-medium"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              <span>Sign Out</span>
+            </Link>
+          </div>
         </div>
       </div>
     </aside>

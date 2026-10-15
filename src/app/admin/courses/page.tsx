@@ -20,6 +20,7 @@ import {
   setCourseStatusAction,
   duplicateCourseAction,
   deleteCourseAction,
+  clearAllDemoCoursesAction,
 } from "./actions";
 
 export const metadata = {
@@ -42,12 +43,31 @@ export default async function AdminCoursesPage() {
           </p>
         </div>
 
-        <Link href="/admin/courses/new">
-          <Button variant="gradient" size="sm" className="rounded-xl">
-            <PlusCircle className="mr-1.5 h-4 w-4" />
-            Create Masterclass
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2.5">
+          <form
+            action={async () => {
+              "use server";
+              await clearAllDemoCoursesAction();
+            }}
+          >
+            <Button
+              type="submit"
+              variant="outline"
+              size="sm"
+              className="rounded-xl text-destructive hover:bg-destructive/10"
+            >
+              <Trash2 className="mr-1.5 h-3.5 w-3.5" />
+              Remove Demo Courses
+            </Button>
+          </form>
+
+          <Link href="/admin/courses/new">
+            <Button variant="gradient" size="sm" className="rounded-xl">
+              <PlusCircle className="mr-1.5 h-4 w-4" />
+              Create Masterclass
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Courses Table Card */}

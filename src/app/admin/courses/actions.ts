@@ -116,6 +116,29 @@ export async function deleteCourseAction(courseId: string) {
   }
 }
 
+export async function clearAllDemoCoursesAction() {
+  const session = await requireAdmin();
+  try {
+    const courses = await dataStore.getCourses({ includeDrafts: true });
+    for (const c of courses) {
+      if (
+        c.id.startsWith("a0000001-") ||
+        c.slug.includes("architecture") ||
+        c.slug.includes("kubernetes") ||
+        c.slug.includes("cybersecurity") ||
+        c.slug.includes("ai-llm")
+      ) {
+        await dataStore.deleteCourse(c.id, session.user!.id);
+      }
+    }
+    revalidatePath("/admin/courses");
+    revalidatePath("/courses");
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || "Failed to clear demo courses" };
+  }
+}
+
 export async function duplicateCourseAction(courseId: string) {
   const session = await requireAdmin();
   try {

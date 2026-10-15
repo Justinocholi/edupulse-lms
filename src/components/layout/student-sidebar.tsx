@@ -12,6 +12,7 @@ import {
   HelpCircle,
   FileQuestion,
   ChevronRight,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -80,6 +81,17 @@ export function StudentSidebar() {
             className="mt-2.5 inline-block font-semibold text-teal-600 dark:text-teal-400 hover:underline"
           >
             Contact Advisor →
+          </Link>
+        </div>
+
+        {/* Sign Out Link */}
+        <div className="pt-2 border-t border-border/60">
+          <Link
+            href="/logout"
+            className="flex items-center gap-2 text-xs text-destructive hover:bg-destructive/10 px-2 py-1.5 rounded-lg transition-colors font-medium"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+            <span>Sign Out</span>
           </Link>
         </div>
       </div>

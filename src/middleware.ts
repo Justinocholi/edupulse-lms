@@ -2,12 +2,66 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
   let response = NextResponse.next({
     request: {
       headers: request.headers,
     },
   });
 
+  // Fast path: bypass all auth calls for static assets, public marketing, and non-protected pages
+  const isProtectedAdmin = pathname.startsWith("/admin");
+  const isProtectedUser = pathname.startsWith("/dashboard") || pathname.startsWith("/learn");
+  const isAuthPage = pathname === "/login" || pathname === "/register" || pathname === "/forgot-password";
+
+  // Check custom admin/test session cookies first
+  const adminCookie = request.cookies.get("edupulse-admin-session")?.value;
+  const testCookie = request.cookies.get("edupulse-test-session")?.value;
+
+  if (adminCookie) {
+    if (isAuthPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/admin";
+      return NextResponse.redirect(url);
+    }
+    // Admin cookie grants access to admin, dashboard, and learn
+    return response;
+  }
+
+  if (testCookie) {
+    if (isAuthPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/dashboard";
+      return NextResponse.redirect(url);
+    }
+    return response;
+  }
+
+  // Check if any Supabase auth cookies exist
+  const hasSupabaseCookie = request.cookies
+    .getAll()
+    .some((c) => c.name.startsWith("sb-") && c.name.includes("-auth-token"));
+
+  // If public page (not protected, not auth page) and no auth cookies, return immediately (0ms latency!)
+  if (!isProtectedAdmin && !isProtectedUser && !isAuthPage) {
+    return response;
+  }
+
+  // If protected route and no auth cookies, redirect to login immediately without remote network roundtrip
+  if ((isProtectedAdmin || isProtectedUser) && !hasSupabaseCookie) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    url.searchParams.set("next", pathname);
+    return NextResponse.redirect(url);
+  }
+
+  // If auth page and no auth cookies, allow immediately
+  if (isAuthPage && !hasSupabaseCookie) {
+    return response;
+  }
+
+  // Only initialize Supabase client if an auth cookie actually exists
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
@@ -32,53 +86,59 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  // Verify real user session directly with Supabase Auth engine
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  const pathname = request.nextUrl.pathname;
+    // Strict route protection for /admin
+    if (isProtectedAdmin) {
+      if (!user) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/login";
+        url.searchParams.set("next", pathname);
+        return NextResponse.redirect(url);
+      }
 
-  // Strict route protection for /admin
-  if (pathname.startsWith("/admin")) {
-    if (!user) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/login";
-      url.searchParams.set("next", pathname);
-      return NextResponse.redirect(url);
+      const { data: roleData } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+
+      if (!roleData) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/dashboard";
+        url.searchParams.set("error", "unauthorized_admin_access");
+        return NextResponse.redirect(url);
+      }
     }
 
-    // Server-enforced role verification from user_roles table
-    const { data: roleData } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("role", "admin")
-      .maybeSingle();
+    // Strict route protection for /dashboard and /learn
+    if (isProtectedUser) {
+      if (!user) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/login";
+        url.searchParams.set("next", pathname);
+        return NextResponse.redirect(url);
+      }
+    }
 
-    if (!roleData) {
+    // Redirect authenticated users away from auth pages
+    if (user && isAuthPage) {
       const url = request.nextUrl.clone();
       url.pathname = "/dashboard";
-      url.searchParams.set("error", "unauthorized_admin_access");
       return NextResponse.redirect(url);
     }
-  }
-
-  // Strict route protection for /dashboard and /learn
-  if (pathname.startsWith("/dashboard") || pathname.startsWith("/learn")) {
-    if (!user) {
+  } catch {
+    // If Supabase check fails on protected route, redirect to login
+    if (isProtectedAdmin || isProtectedUser) {
       const url = request.nextUrl.clone();
       url.pathname = "/login";
       url.searchParams.set("next", pathname);
       return NextResponse.redirect(url);
     }
-  }
-
-  // Redirect authenticated users away from auth pages to their dashboard
-  if (user && (pathname === "/login" || pathname === "/register" || pathname === "/forgot-password")) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
   }
 
   return response;

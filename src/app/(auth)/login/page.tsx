@@ -37,8 +37,7 @@ export default function LoginPage() {
       const res = await loginAction(formData);
       if (res.success) {
         toast.success("Welcome back!");
-        router.push(res.redirectTo || nextUrl);
-        router.refresh();
+        window.location.href = res.redirectTo || nextUrl;
       } else {
         toast.error(res.error || "Login failed");
       }
