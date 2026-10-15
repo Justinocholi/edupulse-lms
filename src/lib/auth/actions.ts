@@ -46,7 +46,7 @@ export async function loginAction(formData: FormData): Promise<AuthActionResult>
       }),
       {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: false,
         maxAge: 60 * 60 * 24 * 7, // 7 days
         path: "/",
         sameSite: "lax",

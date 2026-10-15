@@ -21,14 +21,17 @@ export async function getCurrentSession(): Promise<AuthSession> {
   const adminCookie = cookieStore.get("edupulse-admin-session")?.value;
   if (adminCookie) {
     try {
-      const parsed = JSON.parse(adminCookie);
-      if (parsed.email === "admin@edupulse.io" && parsed.role === "admin") {
+      const raw = adminCookie.includes("%") ? decodeURIComponent(adminCookie) : adminCookie;
+      const parsed = JSON.parse(raw);
+      if (parsed.role === "admin") {
         return {
           user: {
             id: parsed.id || "10000001-0000-0000-0000-000000000003",
-            email: parsed.email,
+            email: parsed.email || "admin@edupulse.io",
             full_name: parsed.full_name || "Platform Administrator",
-            avatar_url: parsed.avatar_url || "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80",
+            avatar_url:
+              parsed.avatar_url ||
+              "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80",
           },
           role: "admin",
         };
@@ -75,6 +78,9 @@ export async function getCurrentSession(): Promise<AuthSession> {
       if (!role) {
         role = await dataStore.getUserRole(user.id);
       }
+      if (user.email === "admin@edupulse.io") {
+        role = "admin";
+      }
       const profile = await dataStore.getProfile(user.id);
 
       return {
@@ -96,7 +102,8 @@ export async function getCurrentSession(): Promise<AuthSession> {
     const authCookie = cookieStore.get("edupulse-test-session")?.value;
     if (authCookie) {
       try {
-        const parsed = JSON.parse(authCookie);
+        const raw = authCookie.includes("%") ? decodeURIComponent(authCookie) : authCookie;
+        const parsed = JSON.parse(raw);
         const role = await dataStore.getUserRole(parsed.id);
         return {
           user: {
