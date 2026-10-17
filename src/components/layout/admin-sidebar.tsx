@@ -55,6 +55,7 @@ export function AdminSidebar() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  prefetch={false}
                   className={cn(
                     "group flex items-center justify-between rounded-xl px-3 py-2 text-sm font-medium transition-all",
                     isActive

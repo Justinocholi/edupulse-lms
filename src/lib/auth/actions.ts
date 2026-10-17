@@ -33,33 +33,24 @@ export async function loginAction(formData: FormData): Promise<AuthActionResult>
     email.toLowerCase() === "admin@edupulse.io" &&
     (password === "Admin12345!" || password === "EduPulseAdmin2026!")
   ) {
-    const cookieStore = cookies();
-    cookieStore.set(
-      "edupulse-admin-session",
-      JSON.stringify({
-        id: "10000001-0000-0000-0000-000000000003",
-        email: "admin@edupulse.io",
-        full_name: "Platform Administrator",
-        role: "admin",
-        avatar_url:
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80",
-      }),
-      {
-        httpOnly: true,
-        secure: false,
-        maxAge: 60 * 60 * 24 * 7, // 7 days
-        path: "/",
-        sameSite: "lax",
-      }
-    );
+    const adminData = {
+      id: "10000001-0000-0000-0000-000000000003",
+      email: "admin@edupulse.io",
+      full_name: "Platform Administrator",
+      role: "admin",
+      avatar_url:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80",
+    };
+    const sessionToken = Buffer.from(JSON.stringify(adminData)).toString("base64");
 
-    // Also attempt Supabase sign in if configured (keeps Supabase session in sync)
-    if (isSupabaseConfigured() && !isTestMode()) {
-      try {
-        const supabase = createClient();
-        await supabase.auth.signInWithPassword({ email, password });
-      } catch {}
-    }
+    const cookieStore = cookies();
+    cookieStore.set("edupulse-admin-session", sessionToken, {
+      httpOnly: true,
+      secure: false,
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
+      sameSite: "lax",
+    });
 
     const nextParam = (formData.get("next") as string) || "/admin";
     return {

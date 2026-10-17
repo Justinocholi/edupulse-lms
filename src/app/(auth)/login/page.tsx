@@ -29,12 +29,19 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginInput) => {
     try {
       setLoading(true);
-      const formData = new FormData();
-      formData.append("email", data.email);
-      formData.append("password", data.password);
-      formData.append("next", nextUrl);
 
-      const res = await loginAction(formData);
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+          next: nextUrl,
+        }),
+      });
+
+      const res = await response.json();
+
       if (res.success) {
         toast.success("Welcome back!");
         window.location.href = res.redirectTo || nextUrl;
@@ -42,6 +49,19 @@ export default function LoginPage() {
         toast.error(res.error || "Login failed. Please check your credentials.");
       }
     } catch {
+      // Fallback to server action if direct API fails
+      try {
+        const formData = new FormData();
+        formData.append("email", data.email);
+        formData.append("password", data.password);
+        formData.append("next", nextUrl);
+        const res = await loginAction(formData);
+        if (res.success) {
+          toast.success("Welcome back!");
+          window.location.href = res.redirectTo || nextUrl;
+          return;
+        }
+      } catch {}
       toast.error("An unexpected error occurred during login.");
     } finally {
       setLoading(false);
