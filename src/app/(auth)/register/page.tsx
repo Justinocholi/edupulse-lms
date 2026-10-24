@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Sparkles, Loader2, ArrowRight, ShieldCheck } from "lucide-react";
+import { Loader2, ArrowRight } from "lucide-react";
 import { registerSchema, RegisterInput } from "@/lib/validations/auth";
 import { registerAction } from "@/lib/auth/actions";
 import { Button } from "@/components/ui/button";
@@ -35,9 +35,8 @@ export default function RegisterPage() {
 
       const res = await registerAction(formData);
       if (res.success) {
-        toast.success("Account created successfully! Welcome to EduPulse.");
+        toast.success("Account created successfully! Welcome to Teacher Home.");
         router.push(res.redirectTo || "/dashboard");
-        router.refresh();
       } else {
         toast.error(res.error || "Registration failed");
       }
@@ -52,20 +51,26 @@ export default function RegisterPage() {
     <div className="container flex min-h-[calc(100vh-8rem)] items-center justify-center py-12 px-4">
       <div className="w-full max-w-md space-y-6">
         {/* Brand header */}
-        <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-brand-600 to-teal-400 text-white shadow-md">
-              <Sparkles className="h-5 w-5 fill-current" />
+        <div className="text-center space-y-3">
+          <Link href="/" className="inline-flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#003366] text-white shadow-md p-1 border border-[#990033]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/assets/logo.png" alt="Teacher Home Crest" className="h-full w-full object-contain" />
             </div>
-            <span className="font-heading text-2xl font-bold tracking-tight text-foreground">
-              Edu<span className="text-teal-500">Pulse</span>
-            </span>
+            <div className="flex flex-col text-left">
+              <span className="font-heading text-xl font-bold tracking-tight text-[#003366] dark:text-white leading-none">
+                Teacher Home
+              </span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#990033] dark:text-[#ff6685] mt-1">
+                Secondary School
+              </span>
+            </div>
           </Link>
           <h1 className="font-heading text-2xl font-bold text-foreground">
-            Create Your Account
+            Register Student Account
           </h1>
           <p className="text-xs text-muted-foreground">
-            Start your learning journey with institutional masterclasses.
+            Create your account to access enrolled subjects and digital quizzes.
           </p>
         </div>
 
@@ -75,7 +80,7 @@ export default function RegisterPage() {
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-foreground">Full Name</label>
               <Input
-                placeholder="Jane Smith"
+                placeholder="e.g., Samuel Okoh"
                 {...register("full_name")}
               />
               {errors.full_name && (
@@ -87,7 +92,7 @@ export default function RegisterPage() {
               <label className="text-xs font-semibold text-foreground">Email Address</label>
               <Input
                 type="email"
-                placeholder="jane@company.com"
+                placeholder="student@example.com"
                 {...register("email")}
               />
               {errors.email && (
@@ -99,7 +104,7 @@ export default function RegisterPage() {
               <label className="text-xs font-semibold text-foreground">Password</label>
               <Input
                 type="password"
-                placeholder="Min. 8 chars, 1 uppercase, 1 number"
+                placeholder="••••••••"
                 {...register("password")}
               />
               {errors.password && (
@@ -119,18 +124,10 @@ export default function RegisterPage() {
               )}
             </div>
 
-            <div className="rounded-lg bg-muted/40 p-3 text-[11px] text-muted-foreground flex items-start gap-2">
-              <ShieldCheck className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-              <span>
-                New registrations are granted student permissions by default. Administrative roles are managed via secure server-side delegation.
-              </span>
-            </div>
-
             <Button
               type="submit"
-              variant="gradient"
               disabled={loading}
-              className="w-full rounded-xl"
+              className="w-full rounded-xl bg-[#003366] text-white hover:bg-[#002a54] font-bold text-xs"
             >
               {loading ? (
                 <>
@@ -139,7 +136,7 @@ export default function RegisterPage() {
                 </>
               ) : (
                 <>
-                  Complete Registration
+                  Create Student Account
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </>
               )}
@@ -148,8 +145,8 @@ export default function RegisterPage() {
 
           <div className="mt-6 text-center text-xs text-muted-foreground border-t border-border/60 pt-4">
             Already have an account?{" "}
-            <Link href="/login" className="font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-              Sign In Instead
+            <Link href="/login" className="font-semibold text-[#003366] dark:text-[#66b2ff] hover:underline">
+              Sign In
             </Link>
           </div>
         </div>

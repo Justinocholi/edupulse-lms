@@ -16,20 +16,21 @@ import {
   ChevronRight,
   ExternalLink,
   LogOut,
+  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const adminLinks = [
   { href: "/admin", label: "Analytics & Overview", icon: LayoutDashboard },
-  { href: "/admin/courses", label: "Course Management", icon: BookOpenCheck },
-  { href: "/admin/courses/new", label: "Create New Course", icon: PlusCircle },
-  { href: "/admin/users", label: "User Management", icon: Users },
-  { href: "/admin/categories", label: "Category Taxonomy", icon: Tags },
-  { href: "/admin/assessments", label: "Quiz Manager", icon: FileQuestion },
+  { href: "/admin/courses", label: "Subject Management", icon: BookOpenCheck },
+  { href: "/admin/courses/new", label: "Create New Subject", icon: PlusCircle },
+  { href: "/admin/users", label: "Student & Staff Registry", icon: Users },
+  { href: "/admin/categories", label: "Academic Categories", icon: Tags },
+  { href: "/admin/assessments", label: "Examination Quizzes", icon: FileQuestion },
   { href: "/admin/certificates", label: "Certificates Registry", icon: Award },
   { href: "/admin/reviews", label: "Review Moderation", icon: MessageSquare },
-  { href: "/admin/audit-logs", label: "Security Audit Logs", icon: ShieldAlert },
-  { href: "/admin/settings", label: "Platform Settings", icon: Sliders },
+  { href: "/admin/audit-logs", label: "Security & Audit Telemetry", icon: ShieldAlert },
+  { href: "/admin/settings", label: "School Parameters", icon: Sliders },
 ];
 
 export function AdminSidebar() {
@@ -40,10 +41,10 @@ export function AdminSidebar() {
       <div className="space-y-6">
         <div>
           <div className="flex items-center justify-between px-3 mb-2">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">
-              Admin Console
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#003366] dark:text-[#66b2ff]">
+              Staff &amp; Admin Console
             </h3>
-            <span className="text-[10px] font-mono rounded bg-brand-500/10 px-1.5 py-0.5 text-brand-600 dark:text-brand-400">
+            <span className="text-[10px] font-mono rounded bg-[#003366]/10 px-1.5 py-0.5 text-[#003366] dark:text-[#66b2ff] font-bold">
               v1.0
             </span>
           </div>
@@ -57,10 +58,10 @@ export function AdminSidebar() {
                   href={item.href}
                   prefetch={false}
                   className={cn(
-                    "group flex items-center justify-between rounded-xl px-3 py-2 text-sm font-medium transition-all",
+                    "group flex items-center justify-between rounded-xl px-3 py-2 text-xs font-semibold transition-all",
                     isActive
-                      ? "bg-brand-600 text-white shadow-sm font-semibold"
-                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
+                      ? "bg-[#003366] text-white shadow-sm font-bold"
+                      : "text-muted-foreground hover:bg-[#e9f5ff] dark:hover:bg-slate-800 hover:text-[#003366] dark:hover:text-white"
                   )}
                 >
                   <div className="flex items-center gap-3">
@@ -82,11 +83,10 @@ export function AdminSidebar() {
         {/* Live Site Preview Quick Link */}
         <div className="border-t border-border pt-4 px-2 space-y-2">
           <Link
-            href="/courses"
-            target="_blank"
+            href="/"
             className="flex items-center justify-between text-xs text-muted-foreground hover:text-foreground"
           >
-            <span>Public Catalog</span>
+            <span>School Home</span>
             <ExternalLink className="h-3.5 w-3.5" />
           </Link>
           <Link
@@ -96,6 +96,15 @@ export function AdminSidebar() {
             <span>Student Dashboard</span>
             <ExternalLink className="h-3.5 w-3.5" />
           </Link>
+          <a
+            href="https://school-website-one-umber.vercel.app/admin-login"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center justify-between text-xs text-muted-foreground hover:text-foreground"
+          >
+            <span>External Admin Gateway</span>
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
           <div className="pt-2 border-t border-border/60">
             <Link
               href="/logout"

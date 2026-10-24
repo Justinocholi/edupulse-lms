@@ -2,29 +2,45 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Sparkles, Loader2, ArrowRight, MoveLeft, CheckCircle2 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Loader2, ArrowRight, CheckCircle2 } from "lucide-react";
+import { forgotPasswordAction } from "@/lib/auth/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { forgotPasswordAction } from "@/lib/auth/actions";
+
+const forgotPasswordSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+});
+
+type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgotPasswordPage() {
   const [loading, setLoading] = React.useState(false);
   const [sent, setSent] = React.useState(false);
-  const [email, setEmail] = React.useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ForgotPasswordInput>({
+    resolver: zodResolver(forgotPasswordSchema),
+  });
+
+  const onSubmit = async (data: ForgotPasswordInput) => {
     try {
+      setLoading(true);
       const formData = new FormData();
-      formData.append("email", email);
+      formData.append("email", data.email);
+
       const res = await forgotPasswordAction(formData);
       if (res.success) {
         setSent(true);
-        toast.success("Password reset instructions dispatched to your email.");
+        toast.success("Password recovery instructions sent to your email.");
       } else {
-        toast.error(res.error || "Failed to dispatch recovery link.");
+        toast.error(res.error || "Failed to process request.");
       }
     } catch {
       toast.error("An unexpected error occurred.");
@@ -36,14 +52,20 @@ export default function ForgotPasswordPage() {
   return (
     <div className="container flex min-h-[calc(100vh-8rem)] items-center justify-center py-12 px-4">
       <div className="w-full max-w-md space-y-6">
-        <div className="text-center space-y-2">
-          <Link href="/" className="inline-flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-brand-600 to-teal-400 text-white shadow-md">
-              <Sparkles className="h-5 w-5 fill-current" />
+        <div className="text-center space-y-3">
+          <Link href="/" className="inline-flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#003366] text-white shadow-md p-1 border border-[#990033]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/assets/logo.png" alt="Teacher Home Crest" className="h-full w-full object-contain" />
             </div>
-            <span className="font-heading text-2xl font-bold tracking-tight text-foreground">
-              Edu<span className="text-teal-500">Pulse</span>
-            </span>
+            <div className="flex flex-col text-left">
+              <span className="font-heading text-xl font-bold tracking-tight text-[#003366] dark:text-white leading-none">
+                Teacher Home
+              </span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#990033] dark:text-[#ff6685] mt-1">
+                Secondary School
+              </span>
+            </div>
           </Link>
           <h1 className="font-heading text-2xl font-bold text-foreground">
             Password Recovery
@@ -59,38 +81,37 @@ export default function ForgotPasswordPage() {
               <CheckCircle2 className="mx-auto h-12 w-12 text-emerald-500" />
               <h3 className="font-bold text-base text-foreground">Instructions Sent</h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                If an account matches that email address, you will receive password reset instructions within moments.
+                If an account exists with that email address, you will receive password reset instructions shortly.
               </p>
               <Link href="/login" className="inline-block pt-2">
-                <Button variant="outline" size="sm">
-                  <MoveLeft className="mr-1.5 h-4 w-4" />
+                <Button variant="outline" size="sm" className="rounded-xl">
                   Return to Sign In
                 </Button>
               </Link>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">Email Address</label>
+                <label className="text-xs font-semibold text-foreground">Account Email</label>
                 <Input
                   type="email"
-                  required
-                  placeholder="name@company.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@teacherhomeschool.com"
+                  {...register("email")}
                 />
+                {errors.email && (
+                  <p className="text-xs text-destructive">{errors.email.message}</p>
+                )}
               </div>
 
               <Button
                 type="submit"
-                variant="gradient"
                 disabled={loading}
-                className="w-full rounded-xl"
+                className="w-full rounded-xl bg-[#003366] text-white hover:bg-[#002a54] font-bold text-xs"
               >
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Sending link...
+                    Sending Recovery Link...
                   </>
                 ) : (
                   <>
@@ -99,14 +120,15 @@ export default function ForgotPasswordPage() {
                   </>
                 )}
               </Button>
-
-              <div className="text-center pt-2">
-                <Link href="/login" className="text-xs text-muted-foreground hover:text-foreground">
-                  Remember password? Sign in
-                </Link>
-              </div>
             </form>
           )}
+
+          <div className="mt-6 text-center text-xs text-muted-foreground border-t border-border/60 pt-4">
+            Remember your credentials?{" "}
+            <Link href="/login" className="font-semibold text-[#003366] dark:text-[#66b2ff] hover:underline">
+              Sign In
+            </Link>
+          </div>
         </div>
       </div>
     </div>
