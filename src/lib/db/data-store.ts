@@ -18,6 +18,10 @@ import {
   StudentDashboardStats,
   Announcement,
   PlatformSettings,
+  Batch,
+  BatchAnnouncement,
+  DiscussionThread,
+  DiscussionReply,
 } from "@/types";
 import { generateCertificateCode } from "@/lib/utils";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
@@ -63,6 +67,8 @@ interface MemoryDatabase {
   notifications: Notification[];
   auditLogs: AuditLog[];
   announcements: Announcement[];
+  batches: Batch[];
+  discussions: DiscussionThread[];
   settings: Record<string, any>;
   platform_settings?: PlatformSettings;
 }
@@ -577,7 +583,21 @@ const initialDb: MemoryDatabase = {
     },
   ],
   quizAttempts: [],
-  certificates: [],
+  certificates: [
+    {
+      id: "cert-01",
+      certificate_code: "EDU-A1B2-C3D4-E5F6",
+      user_id: "sample-alumni-01",
+      course_id: "a0000001-0000-0000-0000-000000000002",
+      issue_date: "2026-10-15T00:00:00Z",
+      verification_url: "/certificates/EDU-A1B2-C3D4-E5F6",
+      recipient_name: "Chioma Okonjo",
+      course_title: "Cloud-Native Kubernetes & Distributed Microservices",
+      instructor_name: "Dr. Sarah Chen",
+      final_grade_percentage: 95,
+      created_at: "2026-10-15T00:00:00Z",
+    },
+  ],
   reviews: [],
   bookmarks: [],
   notifications: [],
@@ -593,6 +613,148 @@ const initialDb: MemoryDatabase = {
       created_by: "10000001-0000-0000-0000-000000000003",
       created_at: "2026-01-01T00:00:00Z",
       updated_at: "2026-01-01T00:00:00Z",
+    },
+  ],
+  batches: [
+    {
+      id: "batch-01",
+      title: "SS 2 Science & Computer Studies - Term 1 Cohort",
+      course_id: "a0000001-0000-0000-0000-000000000001",
+      instructor_id: "20000001-0000-0000-0000-000000000002",
+      start_date: "2026-10-01T09:00:00Z",
+      end_date: "2026-12-18T17:00:00Z",
+      live_class_url: "https://zoom.us/j/teacher-home-science-batch",
+      live_schedule_description: "Tuesdays & Thursdays, 4:00 PM - 5:30 PM WAT",
+      max_seats: 35,
+      enrolled_count: 28,
+      status: "ongoing",
+      created_at: "2026-09-15T00:00:00Z",
+      announcements: [
+        {
+          id: "ba-01",
+          batch_id: "batch-01",
+          title: "Mid-Term Hands-on Assessment Due Next Friday",
+          content: "Please ensure you have reviewed Module 2 Server Components before the upcoming lab exercise.",
+          created_at: "2026-10-20T10:00:00Z",
+          author_name: "Marcus Vance",
+        },
+      ],
+    },
+    {
+      id: "batch-02",
+      title: "Full-Stack Web Engineering Weekend Cohort",
+      course_id: "a0000001-0000-0000-0000-000000000001",
+      instructor_id: "20000001-0000-0000-0000-000000000002",
+      start_date: "2026-11-10T10:00:00Z",
+      end_date: "2027-01-30T16:00:00Z",
+      live_class_url: "https://meet.google.com/xyz-thss-lms",
+      live_schedule_description: "Saturdays 10:00 AM - 1:00 PM WAT",
+      max_seats: 50,
+      enrolled_count: 42,
+      status: "upcoming",
+      created_at: "2026-10-01T00:00:00Z",
+      announcements: [],
+    },
+    {
+      id: "batch-03",
+      title: "Cloud Infrastructure & Robotics Lab",
+      course_id: "a0000001-0000-0000-0000-000000000002",
+      instructor_id: "20000001-0000-0000-0000-000000000001",
+      start_date: "2026-10-15T15:00:00Z",
+      end_date: "2026-12-22T18:00:00Z",
+      live_class_url: "https://zoom.us/j/teacher-home-robotics-lab",
+      live_schedule_description: "Mondays & Wednesdays 3:30 PM - 5:00 PM WAT",
+      max_seats: 30,
+      enrolled_count: 22,
+      status: "ongoing",
+      created_at: "2026-10-05T00:00:00Z",
+      announcements: [
+        {
+          id: "ba-02",
+          batch_id: "batch-03",
+          title: "Kubernetes Cluster Access Credentials",
+          content: "The lab cluster credentials for this week's microservices deployment have been posted to your dashboard.",
+          created_at: "2026-10-22T14:30:00Z",
+          author_name: "Dr. Sarah Chen",
+        },
+      ],
+    },
+  ],
+  discussions: [
+    {
+      id: "disc-01",
+      course_id: "a0000001-0000-0000-0000-000000000001",
+      lesson_id: null,
+      batch_id: "batch-01",
+      category: "Course Help",
+      user_id: "10000001-0000-0000-0000-000000000004",
+      user_name: "Alex Rivera",
+      user_avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80",
+      user_role: "student",
+      title: "How to handle Server Actions authorization in multi-tenant environments?",
+      content: "When submitting mutations from a Next.js client form, what is the safest way to prevent ID tampering before running database updates?",
+      is_solved: true,
+      upvotes: 14,
+      created_at: "2026-10-18T14:20:00Z",
+      replies: [
+        {
+          id: "rep-01",
+          thread_id: "disc-01",
+          user_id: "10000001-0000-0000-0000-000000000002",
+          user_name: "Marcus Vance",
+          user_avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
+          user_role: "instructor",
+          content: "Always re-verify the active session directly on the server inside the Server Action handler using getCurrentSession(), and verify the user ID against the record ownership before committing mutations.",
+          is_answer: true,
+          created_at: "2026-10-18T15:05:00Z",
+        },
+      ],
+    },
+    {
+      id: "disc-02",
+      course_id: null,
+      lesson_id: null,
+      batch_id: null,
+      category: "Academics & Announcements",
+      user_id: "10000001-0000-0000-0000-000000000003",
+      user_name: "Platform Administrator",
+      user_avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80",
+      user_role: "admin",
+      title: "Term 1 Continuous Assessment & Quiz Schedules",
+      content: "All registered students across Teacher Home Secondary School and digital masterclasses: mid-term assessments and quizzes are now active. Check your student dashboard for timelines.",
+      is_solved: false,
+      upvotes: 9,
+      created_at: "2026-10-21T09:00:00Z",
+      replies: [
+        {
+          id: "rep-02",
+          thread_id: "disc-02",
+          user_id: "10000001-0000-0000-0000-000000000004",
+          user_name: "Alex Rivera",
+          user_avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80",
+          user_role: "student",
+          content: "Thank you! The interactive assessment runner on the subject dashboard makes it very easy to track our scores.",
+          is_answer: false,
+          created_at: "2026-10-21T11:30:00Z",
+        },
+      ],
+    },
+    {
+      id: "disc-03",
+      course_id: "a0000001-0000-0000-0000-000000000002",
+      lesson_id: null,
+      batch_id: "batch-03",
+      category: "Technical Support",
+      user_id: "10000001-0000-0000-0000-000000000001",
+      user_name: "Dr. Sarah Chen",
+      user_avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80",
+      user_role: "instructor",
+      title: "Troubleshooting Kubernetes Ingress & Service Mesh in Local Minikube",
+      content: "If you encounter 503 Service Unavailable when routing via Istio gateway locally, verify that your sidecar injection is enabled on the target namespace.",
+      is_solved: true,
+      upvotes: 18,
+      created_at: "2026-10-23T11:00:00Z",
+      replies: [],
     },
   ],
   settings: {
@@ -741,17 +903,12 @@ export const dataStore = {
 
       const { data, error } = await query;
       if (error) throw new Error(`Failed to fetch courses: ${error.message}`);
-      // Remove all demo courses
-      const nonDemo = ((data || []) as Course[]).filter((c) => !c.id.startsWith("a0000001-"));
-      return nonDemo;
+      return (data || []) as Course[];
     }
 
     if (!isTestMode()) throw new SupabaseConfigurationError();
 
     let list = [...db.courses];
-    if (!isTestMode()) {
-      list = list.filter((c) => !c.id.startsWith("a0000001-"));
-    }
     if (!filters?.includeDrafts) {
       list = list.filter((c) => c.status === "published");
     } else if (filters?.status) {
@@ -785,7 +942,6 @@ export const dataStore = {
       const { data, error } = await query.maybeSingle();
       if (error) throw new Error(`Failed to fetch course: ${error.message}`);
       if (!data) return null;
-      if (!isTestMode() && data.id.startsWith("a0000001-")) return null;
 
       // Sort nested modules and lessons
       if (data.modules) {
@@ -808,7 +964,6 @@ export const dataStore = {
 
     const course = db.courses.find((c) => c.slug === slug);
     if (!course) return null;
-    if (!isTestMode() && course.id.startsWith("a0000001-")) return null;
     if (!options?.includeDrafts && course.status !== "published") return null;
     const category = db.categories.find((c) => c.id === course.category_id) || null;
     const courseModules = db.modules
@@ -833,7 +988,6 @@ export const dataStore = {
   },
 
   async getCourseById(id: string): Promise<Course | null> {
-    if (!isTestMode() && id.startsWith("a0000001-")) return null;
     if (isSupabaseConfigured() && !isTestMode()) {
       const supabase = getSupabase()!;
       const { data, error } = await supabase
@@ -843,7 +997,6 @@ export const dataStore = {
         .maybeSingle();
       if (error) throw new Error(`Failed to fetch course by ID: ${error.message}`);
       if (!data) return null;
-      if (data.id.startsWith("a0000001-")) return null;
 
       if (data.modules) {
         data.modules.sort((a: any, b: any) => a.sort_order - b.sort_order);
@@ -865,7 +1018,6 @@ export const dataStore = {
 
     const course = db.courses.find((c) => c.id === id);
     if (!course) return null;
-    if (!isTestMode() && course.id.startsWith("a0000001-")) return null;
     const category = db.categories.find((c) => c.id === course.category_id) || null;
     const courseModules = db.modules
       .filter((m) => m.course_id === course.id)
@@ -1873,6 +2025,25 @@ export const dataStore = {
     return db.certificates.filter((c) => c.user_id === userId);
   },
 
+  async getCertificates(): Promise<Certificate[]> {
+    if (isSupabaseConfigured() && !isTestMode()) {
+      const supabase = getSupabase()!;
+      const { data, error } = await supabase
+        .from("certificates")
+        .select("*, course:courses(*)")
+        .order("created_at", { ascending: false });
+      if (error) throw new Error(`Failed to fetch certificates: ${error.message}`);
+      return (data || []) as Certificate[];
+    }
+
+    if (!isTestMode()) throw new SupabaseConfigurationError();
+
+    return (db.certificates || []).map((cert) => ({
+      ...cert,
+      course: db.courses.find((c) => c.id === cert.course_id),
+    }));
+  },
+
   // USERS, PROFILES & ROLES
   async getUserRole(userId: string): Promise<UserRole> {
     if (isSupabaseConfigured() && !isTestMode()) {
@@ -2384,12 +2555,10 @@ export const dataStore = {
       ]);
 
       const totalUsers = usersRes.count || 0;
-      const allCourses = (coursesRes.data || []).filter((c) => !c.id.startsWith("a0000001-"));
+      const allCourses = coursesRes.data || [];
       const publishedCourses = allCourses.filter((c) => c.status === "published").length;
       const draftCourses = allCourses.filter((c) => c.status === "draft").length;
-      const allEnrollments = (enrollmentsRes.data || []).filter(
-        (e) => !e.course_id.startsWith("a0000001-")
-      );
+      const allEnrollments = enrollmentsRes.data || [];
       const totalEnrollments = allEnrollments.length;
       const completedCount = allEnrollments.filter((e) => e.status === "completed").length;
       const completionRate = totalEnrollments > 0 ? Math.round((completedCount / totalEnrollments) * 100) : 0;
@@ -2421,8 +2590,8 @@ export const dataStore = {
 
     if (!isTestMode()) throw new SupabaseConfigurationError();
 
-    const validCourses = isTestMode() ? db.courses : db.courses.filter((c) => !c.id.startsWith("a0000001-"));
-    const validEnrollments = isTestMode() ? db.enrollments : db.enrollments.filter((e) => !e.course_id.startsWith("a0000001-"));
+    const validCourses = db.courses;
+    const validEnrollments = db.enrollments;
     const totalUsers = db.profiles.length;
     const totalCourses = validCourses.length;
     const publishedCourses = validCourses.filter((c) => c.status === "published").length;
@@ -2480,5 +2649,170 @@ export const dataStore = {
 
   async getStudentStats(userId: string): Promise<StudentDashboardStats> {
     return this.getStudentDashboardStats(userId);
+  },
+
+  // BATCH MANAGEMENT (FRAPPE LMS STANDARD)
+  async getBatches(filters?: { courseId?: string; status?: string }): Promise<Batch[]> {
+    let list = [...(db.batches || [])];
+    if (filters?.courseId) {
+      list = list.filter((b) => b.course_id === filters.courseId);
+    }
+    if (filters?.status && filters.status !== "all") {
+      list = list.filter((b) => b.status === filters.status);
+    }
+    return list.map((b) => {
+      const course = db.courses.find((c) => c.id === b.course_id);
+      const instructor = db.instructors.find((i) => i.id === b.instructor_id);
+      return {
+        ...b,
+        course,
+        instructor: instructor
+          ? {
+              ...instructor,
+              profile: db.profiles.find((p) => p.id === instructor.user_id),
+            }
+          : undefined,
+      };
+    });
+  },
+
+  async getBatchById(id: string): Promise<Batch | null> {
+    const batch = (db.batches || []).find((b) => b.id === id);
+    if (!batch) return null;
+    const course = db.courses.find((c) => c.id === batch.course_id);
+    const instructor = db.instructors.find((i) => i.id === batch.instructor_id);
+    return {
+      ...batch,
+      course,
+      instructor: instructor
+        ? {
+            ...instructor,
+            profile: db.profiles.find((p) => p.id === instructor.user_id),
+          }
+        : undefined,
+    };
+  },
+
+  async createBatch(data: Partial<Batch>): Promise<Batch> {
+    const newBatch: Batch = {
+      id: `batch-${Date.now()}`,
+      title: data.title || "Untitled Cohort",
+      course_id: data.course_id || db.courses[0]?.id || "",
+      instructor_id: data.instructor_id || db.instructors[0]?.id || null,
+      start_date: data.start_date || new Date().toISOString(),
+      end_date: data.end_date || new Date(Date.now() + 60 * 24 * 3600 * 1000).toISOString(),
+      live_class_url: data.live_class_url || "https://zoom.us/j/teacher-home-live",
+      live_schedule_description: data.live_schedule_description || "Saturdays 10:00 AM WAT",
+      max_seats: data.max_seats || 40,
+      enrolled_count: data.enrolled_count || 0,
+      status: data.status || "upcoming",
+      created_at: new Date().toISOString(),
+      announcements: data.announcements || [],
+    };
+    db.batches = [newBatch, ...(db.batches || [])];
+    return newBatch;
+  },
+
+  async updateBatch(id: string, updates: Partial<Batch>): Promise<Batch | null> {
+    const index = (db.batches || []).findIndex((b) => b.id === id);
+    if (index === -1) return null;
+    db.batches[index] = { ...db.batches[index], ...updates };
+    return db.batches[index];
+  },
+
+  async deleteBatch(id: string): Promise<boolean> {
+    const initialLen = (db.batches || []).length;
+    db.batches = (db.batches || []).filter((b) => b.id !== id);
+    return db.batches.length < initialLen;
+  },
+
+  // DISCUSSIONS & COMMUNITY FORUM (FRAPPE LMS STANDARD)
+  async getDiscussions(filters?: { courseId?: string; category?: string; search?: string }): Promise<DiscussionThread[]> {
+    let list = [...(db.discussions || [])];
+    if (filters?.courseId) {
+      list = list.filter((d) => d.course_id === filters.courseId);
+    }
+    if (filters?.category && filters.category !== "all") {
+      list = list.filter((d) => d.category?.toLowerCase() === filters.category?.toLowerCase());
+    }
+    if (filters?.search) {
+      const q = filters.search.toLowerCase();
+      list = list.filter((d) => d.title.toLowerCase().includes(q) || d.content.toLowerCase().includes(q));
+    }
+    return list.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  },
+
+  async getDiscussionById(id: string): Promise<DiscussionThread | null> {
+    return (db.discussions || []).find((d) => d.id === id) || null;
+  },
+
+  async createDiscussion(data: {
+    courseId?: string | null;
+    lessonId?: string | null;
+    batchId?: string | null;
+    category?: string;
+    title: string;
+    content: string;
+    userId: string;
+    userName: string;
+    userAvatar?: string;
+    userRole?: string;
+  }): Promise<DiscussionThread> {
+    const thread: DiscussionThread = {
+      id: `disc-${Date.now()}`,
+      course_id: data.courseId || null,
+      lesson_id: data.lessonId || null,
+      batch_id: data.batchId || null,
+      category: data.category || "General Discussion",
+      user_id: data.userId,
+      user_name: data.userName,
+      user_avatar: data.userAvatar,
+      user_role: data.userRole || "student",
+      title: data.title,
+      content: data.content,
+      is_solved: false,
+      upvotes: 1,
+      created_at: new Date().toISOString(),
+      replies: [],
+    };
+    db.discussions = [thread, ...(db.discussions || [])];
+    return thread;
+  },
+
+  async addDiscussionReply(
+    threadId: string,
+    reply: {
+      userId: string;
+      userName: string;
+      userAvatar?: string;
+      userRole?: string;
+      content: string;
+      isAnswer?: boolean;
+    }
+  ): Promise<DiscussionReply | null> {
+    const thread = (db.discussions || []).find((d) => d.id === threadId);
+    if (!thread) return null;
+    const newReply: DiscussionReply = {
+      id: `rep-${Date.now()}`,
+      thread_id: threadId,
+      user_id: reply.userId,
+      user_name: reply.userName,
+      user_avatar: reply.userAvatar,
+      user_role: reply.userRole || "student",
+      content: reply.content,
+      is_answer: Boolean(reply.isAnswer),
+      created_at: new Date().toISOString(),
+    };
+    if (!thread.replies) thread.replies = [];
+    thread.replies.push(newReply);
+    if (reply.isAnswer) thread.is_solved = true;
+    return newReply;
+  },
+
+  async toggleDiscussionUpvote(threadId: string): Promise<{ upvotes: number }> {
+    const thread = (db.discussions || []).find((d) => d.id === threadId);
+    if (!thread) return { upvotes: 0 };
+    thread.upvotes = (thread.upvotes || 0) + 1;
+    return { upvotes: thread.upvotes };
   },
 };

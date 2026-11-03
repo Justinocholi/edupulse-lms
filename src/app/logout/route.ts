@@ -6,6 +6,7 @@ import { isSupabaseConfigured, isTestMode } from "@/lib/db/data-store";
 export async function GET(request: NextRequest) {
   const cookieStore = cookies();
   cookieStore.delete("edupulse-admin-session");
+  cookieStore.delete("edupulse-student-session");
   cookieStore.delete("edupulse-test-session");
 
   // Wipe all Supabase auth cookies
@@ -29,6 +30,7 @@ export async function GET(request: NextRequest) {
 
   const response = NextResponse.redirect(url);
   response.cookies.delete("edupulse-admin-session");
+  response.cookies.delete("edupulse-student-session");
   response.cookies.delete("edupulse-test-session");
 
   for (const cookie of allCookies) {

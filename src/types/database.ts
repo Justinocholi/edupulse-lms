@@ -285,3 +285,61 @@ export interface PlatformSettings {
   certificate_prefix: string;
 }
 
+export interface Batch {
+  id: string;
+  title: string;
+  course_id: string;
+  instructor_id?: string | null;
+  start_date: string;
+  end_date: string;
+  live_class_url?: string;
+  live_schedule_description?: string;
+  max_seats?: number;
+  enrolled_count: number;
+  status: 'upcoming' | 'ongoing' | 'completed';
+  created_at: string;
+  course?: Course;
+  instructor?: InstructorProfile;
+  announcements?: BatchAnnouncement[];
+}
+
+export interface BatchAnnouncement {
+  id: string;
+  batch_id: string;
+  title: string;
+  content: string;
+  created_at: string;
+  author_name: string;
+}
+
+export interface DiscussionThread {
+  id: string;
+  course_id?: string | null;
+  lesson_id?: string | null;
+  batch_id?: string | null;
+  category?: string;
+  user_id: string;
+  user_name: string;
+  user_avatar?: string;
+  user_role?: string;
+  title: string;
+  content: string;
+  is_solved: boolean;
+  upvotes: number;
+  created_at: string;
+  replies?: DiscussionReply[];
+}
+
+export interface DiscussionReply {
+  id: string;
+  thread_id: string;
+  user_id: string;
+  user_name: string;
+  user_avatar?: string;
+  user_role?: string;
+  content: string;
+  is_answer: boolean;
+  created_at: string;
+}
+
+

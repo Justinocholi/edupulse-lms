@@ -18,6 +18,7 @@ import {
 import { dataStore } from "@/lib/db/data-store";
 import { getCurrentSession } from "@/lib/auth/session";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { EnrollButton } from "@/components/courses/enroll-button";
 import { formatDuration, formatCurrency } from "@/lib/utils";
 
@@ -49,6 +50,8 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
     ? await dataStore.getUserEnrollment(session.user.id, course.id)
     : null;
   const isEnrolled = Boolean(userEnrollment);
+
+  const courseBatches = await dataStore.getBatches({ courseId: course.id });
 
   const totalLessons =
     course.modules?.reduce((acc, m) => acc + (m.lessons?.length || 0), 0) || 0;
@@ -294,6 +297,60 @@ export default async function CourseDetailPage({ params }: CourseDetailPageProps
                 )}
               </div>
             </div>
+
+            {/* Frappe LMS: Course Batches & Live Sessions */}
+            {courseBatches.length > 0 && (
+              <div className="rounded-2xl border border-border bg-card p-6 md:p-8 space-y-4 shadow-sm">
+                <div className="flex items-center justify-between border-b border-border/80 pb-3">
+                  <div>
+                    <h3 className="font-heading text-xl font-bold text-foreground flex items-center gap-2">
+                      <Video className="h-5 w-5 text-[#990033]" />
+                      <span>Live Cohorts &amp; Scheduled Batches</span>
+                    </h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Join an active cohort with weekly live Zoom lectures and collaborative classmate study.
+                    </p>
+                  </div>
+                  <Link href="/batches" className="text-xs font-bold text-[#003366] dark:text-[#66b2ff] hover:underline">
+                    All Batches →
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                  {courseBatches.map((batch) => (
+                    <div
+                      key={batch.id}
+                      className="rounded-xl border border-border/80 bg-muted/30 p-4 space-y-3"
+                    >
+                      <div className="flex items-center justify-between">
+                        <Badge
+                          variant={batch.status === "ongoing" ? "success" : "brand"}
+                          className="capitalize text-[10px] font-bold"
+                        >
+                          {batch.status === "ongoing" ? "● Ongoing" : "Upcoming"}
+                        </Badge>
+                        <span className="text-[11px] font-mono text-muted-foreground">
+                          {batch.enrolled_count}/{batch.max_seats || 40} Seats
+                        </span>
+                      </div>
+
+                      <h4 className="font-bold text-sm text-foreground">{batch.title}</h4>
+
+                      <div className="rounded-lg bg-background/80 p-2 text-xs text-muted-foreground flex items-center gap-1.5">
+                        <Clock className="h-3.5 w-3.5 text-[#990033]" />
+                        <span>{batch.live_schedule_description || "Saturdays 10:00 AM WAT"}</span>
+                      </div>
+
+                      <Link href={`/batches/${batch.id}`}>
+                        <Button variant="outline" size="sm" className="w-full text-xs font-bold">
+                          View Batch &amp; Live Timetable →
+                        </Button>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Prerequisites & Audience */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

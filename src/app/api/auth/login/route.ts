@@ -66,6 +66,37 @@ export async function POST(request: NextRequest) {
       return response;
     }
 
+    // 2. Dedicated student login with persistent HTTP cookie
+    if (
+      email.toLowerCase() === "student@edupulse.io" &&
+      (password === "Student12345!" || password === "EduPulseStudent2026!" || password === "Admin12345!")
+    ) {
+      const studentData = {
+        id: "10000001-0000-0000-0000-000000000004",
+        email: "student@edupulse.io",
+        full_name: "Alex Rivera",
+        role: "student",
+        avatar_url:
+          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80",
+      };
+      const sessionToken = Buffer.from(JSON.stringify(studentData)).toString("base64");
+
+      const response = NextResponse.json({
+        success: true,
+        redirectTo: nextParam.startsWith("/admin") ? "/dashboard" : nextParam || "/dashboard",
+      });
+
+      response.cookies.set("edupulse-student-session", sessionToken, {
+        httpOnly: true,
+        secure: false,
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: "/",
+        sameSite: "lax",
+      });
+
+      return response;
+    }
+
     // 2. Live Supabase Authentication
     if (isSupabaseConfigured() && !isTestMode()) {
       try {
@@ -125,6 +156,37 @@ export async function POST(request: NextRequest) {
         secure: false,
         maxAge: 3600,
         path: "/",
+      });
+
+      return response;
+    }
+
+    // 2. Dedicated student login with persistent HTTP cookie
+    if (
+      email.toLowerCase() === "student@edupulse.io" &&
+      (password === "Student12345!" || password === "EduPulseStudent2026!" || password === "Admin12345!")
+    ) {
+      const studentData = {
+        id: "10000001-0000-0000-0000-000000000004",
+        email: "student@edupulse.io",
+        full_name: "Alex Rivera",
+        role: "student",
+        avatar_url:
+          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80",
+      };
+      const sessionToken = Buffer.from(JSON.stringify(studentData)).toString("base64");
+
+      const response = NextResponse.json({
+        success: true,
+        redirectTo: nextParam.startsWith("/admin") ? "/dashboard" : nextParam || "/dashboard",
+      });
+
+      response.cookies.set("edupulse-student-session", sessionToken, {
+        httpOnly: true,
+        secure: false,
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+        path: "/",
+        sameSite: "lax",
       });
 
       return response;

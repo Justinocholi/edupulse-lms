@@ -9,6 +9,8 @@ import {
   TrendingUp,
   FileQuestion,
   Sparkles,
+  Video,
+  Calendar,
 } from "lucide-react";
 import { requireAuth } from "@/lib/auth/session";
 import { dataStore } from "@/lib/db/data-store";
@@ -30,6 +32,7 @@ export default async function StudentOverviewPage() {
   const stats = await dataStore.getStudentStats(userId);
   const enrollments = await dataStore.getUserEnrollments(userId);
   const allCourses = await dataStore.getCourses();
+  const activeBatches = await dataStore.getBatches();
 
   // Find most recent active enrollment for "Continue Learning"
   const activeEnrollments = enrollments.filter((e) => e.status === "active");
@@ -181,6 +184,76 @@ export default async function StudentOverviewPage() {
                 </Link>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Frappe LMS: Active Cohorts & Live Classes */}
+      {activeBatches.length > 0 && (
+        <div className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-4">
+          <div className="flex items-center justify-between border-b border-border/80 pb-3">
+            <div>
+              <h2 className="font-heading text-lg font-bold text-foreground flex items-center gap-2">
+                <Video className="h-5 w-5 text-[#990033]" />
+                <span>My Cohorts &amp; Live Timetables</span>
+              </h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Join scheduled live lectures on Zoom and access cohort resources.
+              </p>
+            </div>
+            <Link
+              href="/batches"
+              className="text-xs font-bold text-[#003366] dark:text-[#66b2ff] hover:underline"
+            >
+              Browse All Batches →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+            {activeBatches.slice(0, 3).map((batch) => (
+              <div
+                key={batch.id}
+                className="rounded-xl border border-border/80 bg-muted/30 p-4 space-y-3 flex flex-col justify-between"
+              >
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <Badge
+                      variant={batch.status === "ongoing" ? "success" : "brand"}
+                      className="text-[10px] font-bold"
+                    >
+                      {batch.status === "ongoing" ? "● Ongoing" : "Upcoming"}
+                    </Badge>
+                    <span className="text-[11px] font-mono text-muted-foreground">
+                      {batch.enrolled_count} Students
+                    </span>
+                  </div>
+                  <h4 className="font-bold text-sm text-foreground line-clamp-1">{batch.title}</h4>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <Clock className="h-3 w-3 text-[#990033]" />
+                    <span>{batch.live_schedule_description || "Saturdays 10:00 AM"}</span>
+                  </p>
+                </div>
+
+                <div className="pt-2 flex gap-2">
+                  {batch.live_class_url && (
+                    <a
+                      href={batch.live_class_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex-1 flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r from-[#990033] to-[#7a0029] text-white py-1.5 text-xs font-bold shadow-sm hover:opacity-95"
+                    >
+                      <Video className="h-3.5 w-3.5" />
+                      <span>Join Live</span>
+                    </a>
+                  )}
+                  <Link href={`/batches/${batch.id}`} className="flex-1">
+                    <Button variant="outline" size="sm" className="w-full text-xs font-semibold h-8 rounded-lg">
+                      Batch Hub
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

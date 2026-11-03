@@ -23,7 +23,7 @@ export function CourseCard({ course, progressPercentage, isEnrolled }: CourseCar
     course.modules?.reduce((acc, m) => acc + (m.lessons?.length || 0), 0) || 12;
 
   return (
-    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-brand-500/30">
+    <div className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-[#003366]/40">
       {/* Thumbnail */}
       <Link href={isEnrolled ? `/learn/${course.slug}` : `/courses/${course.slug}`} className="relative aspect-video w-full overflow-hidden bg-muted">
         {course.thumbnail_url ? (
@@ -34,7 +34,7 @@ export function CourseCard({ course, progressPercentage, isEnrolled }: CourseCar
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-brand-900/10 text-brand-600">
+          <div className="flex h-full w-full items-center justify-center bg-[#003366]/10 text-[#003366]">
             <BookOpen className="h-12 w-12" />
           </div>
         )}
@@ -58,7 +58,7 @@ export function CourseCard({ course, progressPercentage, isEnrolled }: CourseCar
       {/* Body */}
       <div className="flex flex-1 flex-col p-5">
         <Link href={isEnrolled ? `/learn/${course.slug}` : `/courses/${course.slug}`}>
-          <h3 className="line-clamp-2 font-heading text-lg font-bold tracking-tight text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+          <h3 className="line-clamp-2 font-heading text-lg font-bold tracking-tight text-foreground group-hover:text-[#003366] dark:group-hover:text-[#66b2ff] transition-colors">
             {course.title}
           </h3>
         </Link>
@@ -103,12 +103,16 @@ export function CourseCard({ course, progressPercentage, isEnrolled }: CourseCar
         <div className="mt-4 pt-2">
           <Link
             href={isEnrolled ? `/learn/${course.slug}` : `/courses/${course.slug}`}
-            className="flex w-full items-center justify-center rounded-xl bg-accent px-4 py-2.5 text-xs font-semibold text-accent-foreground transition hover:bg-brand-600 hover:text-white"
+            className={`flex w-full items-center justify-center rounded-xl px-4 py-2.5 text-xs font-bold transition shadow-sm ${
+              isEnrolled
+                ? "bg-[#003366] text-white hover:bg-[#002244]"
+                : "border border-[#003366]/30 text-[#003366] dark:text-[#66b2ff] hover:bg-[#003366] hover:text-white"
+            }`}
           >
             {isEnrolled ? (
               progressPercentage === 100 ? (
                 <>
-                  <CheckCircle2 className="mr-1.5 h-4 w-4 text-emerald-500" />
+                  <CheckCircle2 className="mr-1.5 h-4 w-4 text-emerald-400" />
                   Completed — Review Lessons
                 </>
               ) : (

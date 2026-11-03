@@ -67,6 +67,48 @@ export async function getCurrentSession(): Promise<AuthSession> {
     }
   }
 
+  // Fast-path: Check dedicated student session cookie
+  const studentCookie = cookieStore.get("edupulse-student-session")?.value;
+  if (studentCookie) {
+    try {
+      let raw = studentCookie.trim();
+      if ((raw.startsWith('"') && raw.endsWith('"')) || (raw.startsWith("'") && raw.endsWith("'"))) {
+        raw = raw.slice(1, -1);
+      }
+      if (raw.includes("%")) {
+        raw = decodeURIComponent(raw);
+      }
+      if (!raw.startsWith("{")) {
+        try {
+          raw = Buffer.from(raw, "base64").toString("utf8");
+        } catch {}
+      }
+      const parsed = JSON.parse(raw);
+      return {
+        user: {
+          id: parsed.id || "10000001-0000-0000-0000-000000000004",
+          email: parsed.email || "student@edupulse.io",
+          full_name: parsed.full_name || "Alex Rivera",
+          avatar_url:
+            parsed.avatar_url ||
+            "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80",
+        },
+        role: "student",
+      };
+    } catch {
+      return {
+        user: {
+          id: "10000001-0000-0000-0000-000000000004",
+          email: "student@edupulse.io",
+          full_name: "Alex Rivera",
+          avatar_url:
+            "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80",
+        },
+        role: "student",
+      };
+    }
+  }
+
   // Fast-path: If no Supabase auth cookie exists, skip remote network call entirely
   const hasSupabaseCookie = cookieStore
     .getAll()

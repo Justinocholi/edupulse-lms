@@ -14,12 +14,16 @@ import {
   ChevronRight,
   LogOut,
   ExternalLink,
+  Video,
+  MessageSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const studentLinks = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/my-learning", label: "My Enrolled Subjects", icon: GraduationCap },
+  { href: "/batches", label: "Batches & Live Classes", icon: Video },
+  { href: "/discussions", label: "Discussions & Q&A", icon: MessageSquare },
   { href: "/dashboard/assessments", label: "Term Assessments & Quizzes", icon: FileQuestion },
   { href: "/dashboard/certificates", label: "Certificates & Honors", icon: Award },
   { href: "/dashboard/bookmarks", label: "Saved Study Materials", icon: Bookmark },

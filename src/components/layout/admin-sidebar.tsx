@@ -17,12 +17,14 @@ import {
   ExternalLink,
   LogOut,
   Shield,
+  Video,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const adminLinks = [
   { href: "/admin", label: "Analytics & Overview", icon: LayoutDashboard },
   { href: "/admin/courses", label: "Subject Management", icon: BookOpenCheck },
+  { href: "/admin/batches", label: "Batches & Cohorts", icon: Video },
   { href: "/admin/courses/new", label: "Create New Subject", icon: PlusCircle },
   { href: "/admin/users", label: "Student & Staff Registry", icon: Users },
   { href: "/admin/categories", label: "Academic Categories", icon: Tags },

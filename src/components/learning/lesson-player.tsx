@@ -17,6 +17,10 @@ import {
   Lock,
   Sparkles,
   BookOpen,
+  MessageSquare,
+  PenLine,
+  Send,
+  Check,
 } from "lucide-react";
 import { Course, Module, Lesson, LessonProgress } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -86,6 +90,64 @@ export function LessonPlayer({
 
   const quizLesson = allLessons.find((l) => l.content_type === "quiz");
   const defaultQuizId = quizLesson?.quiz?.id || "50000001-0000-0000-0000-000000000001";
+
+  // Frappe LMS Tabs: Content, Lesson Q&A, Private Notes, Resources
+  const [activeTab, setActiveTab] = React.useState<"content" | "discussion" | "notes" | "resources">("content");
+  const [personalNotes, setPersonalNotes] = React.useState<string>("");
+  const [savedNotesMessage, setSavedNotesMessage] = React.useState<string>("");
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined" && activeLesson) {
+      const stored = localStorage.getItem(`lesson_notes_${activeLesson.id}`) || "";
+      setPersonalNotes(stored);
+    }
+  }, [activeLesson?.id]);
+
+  const handleSaveNotes = () => {
+    if (typeof window !== "undefined" && activeLesson) {
+      localStorage.setItem(`lesson_notes_${activeLesson.id}`, personalNotes);
+      setSavedNotesMessage("Notes saved!");
+      toast.success("Study notes saved for this lesson");
+      setTimeout(() => setSavedNotesMessage(""), 2500);
+    }
+  };
+
+  const [lessonComments, setLessonComments] = React.useState<
+    { id: string; user: string; role: string; text: string; date: string }[]
+  >([
+    {
+      id: "c1",
+      user: "Alex Rivera",
+      role: "Student",
+      text: "Is there any performance drawback when using Server Actions inside nested components for this lesson?",
+      date: "2 days ago",
+    },
+    {
+      id: "c2",
+      user: "Marcus Vance",
+      role: "Instructor",
+      text: "No drawback! Server Actions are bundled into unique RPC endpoints and handle streaming seamlessly with Suspense.",
+      date: "Yesterday",
+    },
+  ]);
+  const [newComment, setNewComment] = React.useState("");
+
+  const handleAddComment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newComment.trim()) return;
+    setLessonComments((prev) => [
+      ...prev,
+      {
+        id: `c-${Date.now()}`,
+        user: isAdmin ? "Instructor Lead" : "Alex Rivera",
+        role: isAdmin ? "Instructor" : "Student",
+        text: newComment.trim(),
+        date: "Just now",
+      },
+    ]);
+    setNewComment("");
+    toast.success("Question posted to lesson discussion!");
+  };
 
   const handleToggleComplete = async () => {
     if (!activeLesson) return;
@@ -220,34 +282,199 @@ export function LessonPlayer({
                 </div>
               )}
 
-              {/* LESSON NOTES & MARKDOWN CONTENT */}
-              <div className="space-y-4">
-                <div className="border-b border-border/80 pb-4">
-                  <h1 className="font-heading text-2xl md:text-3xl font-extrabold text-foreground">
-                    {activeLesson?.title}
-                  </h1>
-                </div>
+              {/* FRAPPE LMS INTERACTIVE TABS */}
+              <div className="border-b border-border flex items-center gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("content")}
+                  className={`pb-2.5 px-3 text-xs font-bold transition border-b-2 flex items-center gap-1.5 ${
+                    activeTab === "content"
+                      ? "border-[#003366] text-[#003366] dark:text-[#66b2ff] dark:border-[#66b2ff]"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <BookOpen className="h-3.5 w-3.5" />
+                  <span>Lesson Reading</span>
+                </button>
 
-                <div className="prose dark:prose-invert max-w-none text-foreground text-sm md:text-base leading-relaxed whitespace-pre-line">
-                  {activeLesson?.body_markdown}
-                </div>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("discussion")}
+                  className={`pb-2.5 px-3 text-xs font-bold transition border-b-2 flex items-center gap-1.5 ${
+                    activeTab === "discussion"
+                      ? "border-[#003366] text-[#003366] dark:text-[#66b2ff] dark:border-[#66b2ff]"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <MessageSquare className="h-3.5 w-3.5" />
+                  <span>Lesson Q&amp;A ({lessonComments.length})</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("notes")}
+                  className={`pb-2.5 px-3 text-xs font-bold transition border-b-2 flex items-center gap-1.5 ${
+                    activeTab === "notes"
+                      ? "border-[#003366] text-[#003366] dark:text-[#66b2ff] dark:border-[#66b2ff]"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <PenLine className="h-3.5 w-3.5" />
+                  <span>My Notes</span>
+                </button>
+
+                {activeLesson?.resources && activeLesson.resources.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("resources")}
+                    className={`pb-2.5 px-3 text-xs font-bold transition border-b-2 flex items-center gap-1.5 ${
+                      activeTab === "resources"
+                        ? "border-[#003366] text-[#003366] dark:text-[#66b2ff] dark:border-[#66b2ff]"
+                        : "border-transparent text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    <span>Downloads ({activeLesson.resources.length})</span>
+                  </button>
+                )}
               </div>
 
-              {/* DOWNLOADABLE LESSON RESOURCES */}
-              {activeLesson?.resources && activeLesson.resources.length > 0 && (
+              {/* TAB 1: READING CONTENT */}
+              {activeTab === "content" && (
+                <div className="space-y-4">
+                  <div className="border-b border-border/80 pb-3">
+                    <h1 className="font-heading text-2xl md:text-3xl font-extrabold text-foreground">
+                      {activeLesson?.title}
+                    </h1>
+                  </div>
+
+                  <div className="prose dark:prose-invert max-w-none text-foreground text-sm md:text-base leading-relaxed whitespace-pre-line">
+                    {activeLesson?.body_markdown}
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 2: LESSON Q&A DISCUSSION */}
+              {activeTab === "discussion" && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between border-b border-border/80 pb-3">
+                    <h3 className="font-heading text-lg font-bold text-foreground flex items-center gap-2">
+                      <MessageSquare className="h-5 w-5 text-[#003366] dark:text-[#66b2ff]" />
+                      <span>Questions on &ldquo;{activeLesson?.title}&rdquo;</span>
+                    </h3>
+                    <span className="text-xs text-muted-foreground">
+                      {lessonComments.length} contributions
+                    </span>
+                  </div>
+
+                  <div className="space-y-3">
+                    {lessonComments.map((comment) => (
+                      <div
+                        key={comment.id}
+                        className="rounded-2xl border border-border bg-card p-4 space-y-2 text-xs"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-foreground">{comment.user}</span>
+                            <Badge
+                              variant={comment.role === "Instructor" ? "brand" : "outline"}
+                              className="text-[10px] px-1.5 py-0 uppercase font-mono"
+                            >
+                              {comment.role}
+                            </Badge>
+                          </div>
+                          <span className="text-muted-foreground text-[11px]">{comment.date}</span>
+                        </div>
+                        <p className="text-foreground leading-relaxed text-xs md:text-sm">{comment.text}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Ask Question Form */}
+                  <form onSubmit={handleAddComment} className="rounded-2xl border border-border bg-muted/20 p-4 space-y-3">
+                    <span className="text-xs font-bold text-foreground">
+                      Ask a Question about this Lesson
+                    </span>
+                    <textarea
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      required
+                      rows={3}
+                      placeholder="Type your question or clarification here..."
+                      className="w-full rounded-xl border border-border bg-background p-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#003366]"
+                    />
+                    <div className="flex justify-end">
+                      <Button
+                        type="submit"
+                        size="sm"
+                        className="rounded-xl bg-[#003366] hover:bg-[#002244] text-white text-xs font-bold shadow-sm"
+                      >
+                        <Send className="mr-1.5 h-3.5 w-3.5" />
+                        <span>Post Question</span>
+                      </Button>
+                    </div>
+                  </form>
+                </div>
+              )}
+
+              {/* TAB 3: PRIVATE STUDY NOTES */}
+              {activeTab === "notes" && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-border/80 pb-3">
+                    <div>
+                      <h3 className="font-heading text-lg font-bold text-foreground flex items-center gap-2">
+                        <PenLine className="h-5 w-5 text-[#990033]" />
+                        <span>Personal Study Notes</span>
+                      </h3>
+                      <p className="text-xs text-muted-foreground">
+                        Your private notes are automatically saved to your browser session for this lesson.
+                      </p>
+                    </div>
+                    {savedNotesMessage && (
+                      <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                        <Check className="h-4 w-4" />
+                        <span>{savedNotesMessage}</span>
+                      </span>
+                    )}
+                  </div>
+
+                  <textarea
+                    value={personalNotes}
+                    onChange={(e) => setPersonalNotes(e.target.value)}
+                    rows={8}
+                    placeholder="Take notes on key concepts, terminal commands, formulas, or homework reminders..."
+                    className="w-full rounded-2xl border border-border bg-background p-4 text-xs md:text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#003366] font-mono leading-relaxed"
+                  />
+
+                  <div className="flex justify-end">
+                    <Button
+                      type="button"
+                      onClick={handleSaveNotes}
+                      size="sm"
+                      className="rounded-xl bg-[#003366] text-white text-xs font-bold"
+                    >
+                      <Check className="mr-1.5 h-3.5 w-3.5" />
+                      <span>Save Study Notes</span>
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 4 / DOWNLOADABLE LESSON RESOURCES */}
+              {(activeTab === "resources" || (activeTab === "content" && activeLesson?.resources && activeLesson.resources.length > 0)) && (
                 <div className="rounded-2xl border border-border bg-card p-6 space-y-3">
                   <h3 className="font-heading text-lg font-bold text-foreground flex items-center gap-2">
-                    <FileText className="h-5 w-5 text-teal-500" />
-                    Downloadable Resources & Blueprints
+                    <FileText className="h-5 w-5 text-[#003366] dark:text-[#66b2ff]" />
+                    <span>Downloadable Resources &amp; Blueprints</span>
                   </h3>
                   <div className="space-y-2">
-                    {activeLesson.resources.map((res) => (
+                    {activeLesson?.resources?.map((res) => (
                       <div
                         key={res.id}
                         className="flex items-center justify-between rounded-xl border border-border/60 bg-muted/40 p-3 text-xs"
                       >
                         <div className="flex items-center gap-2.5">
-                          <FileText className="h-4 w-4 text-brand-500" />
+                          <FileText className="h-4 w-4 text-[#003366] dark:text-[#66b2ff]" />
                           <span className="font-semibold text-foreground">{res.title}</span>
                           <span className="text-muted-foreground font-mono">
                             ({(res.file_size_bytes ? res.file_size_bytes / 1024 / 1024 : 1.5).toFixed(1)} MB)
@@ -364,7 +591,13 @@ export function LessonPlayer({
                           {isDone ? (
                             <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" />
                           ) : canAccess ? (
-                            <Circle className="h-4 w-4 text-muted-foreground shrink-0" />
+                            lesson.content_type === "video" ? (
+                              <PlayCircle className="h-4 w-4 text-[#003366] dark:text-[#66b2ff] shrink-0" />
+                            ) : lesson.content_type === "quiz" ? (
+                              <HelpCircle className="h-4 w-4 text-[#990033] shrink-0" />
+                            ) : (
+                              <FileText className="h-4 w-4 text-muted-foreground shrink-0" />
+                            )
                           ) : (
                             <Lock className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                           )}

@@ -43,15 +43,15 @@ export default async function CoursesPage({ searchParams }: CoursesPageProps) {
     <div className="container py-12 px-4 space-y-8">
       {/* Header */}
       <div className="space-y-3">
-        <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400">
+        <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#990033] dark:text-[#ff6685]">
           <BookOpen className="h-4 w-4" />
-          Course Catalog
+          <span>Frappe LMS Standard Subject Directory</span>
         </div>
         <h1 className="font-heading text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-          Explore Masterclasses
+          Academic Courses &amp; Masterclasses
         </h1>
-        <p className="text-sm md:text-base text-muted-foreground max-w-2xl">
-          Learn directly from experienced practitioners with structured curriculums, hands-on architectural code, and verified completion credentials.
+        <p className="text-sm md:text-base text-muted-foreground max-w-2xl leading-relaxed">
+          Explore structured curriculums, hands-on laboratory lessons, interactive examination quizzes, and verified certification tracks at Teacher Home Secondary School.
         </p>
       </div>
 

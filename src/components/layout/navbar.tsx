@@ -28,13 +28,13 @@ export function Navbar({ session }: { session: AuthSession }) {
   const [userDropdownOpen, setUserDropdownOpen] = React.useState(false);
 
   const navLinks = [
-    { href: "/#home", label: "Home" },
-    { href: "/#about", label: "About" },
-    { href: "/#academics", label: "Academics" },
+    { href: "/", label: "Home" },
+    { href: "/courses", label: "Courses" },
+    { href: "/batches", label: "Batches & Live" },
+    { href: "/discussions", label: "Discussions" },
+    { href: "/certificates", label: "Certifications" },
+    { href: "/portal", label: "Portals" },
     { href: "/#admissions", label: "Admissions" },
-    { href: "/#management", label: "Management" },
-    { href: "/#facilities", label: "Facilities" },
-    { href: "/#bulletin", label: "Bulletin" },
     { href: "/#contact", label: "Contact" },
   ];
 
