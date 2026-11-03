@@ -1,83 +1,104 @@
 import Link from "next/link";
-import { CheckCircle, ArrowRight, ShieldCheck, Award, Users, BookOpen } from "lucide-react";
+import { Sparkles, BookOpen, Video, ShieldCheck, Award, MessageSquare, ArrowRight, Heart } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const metadata = {
-  title: "About Us | Teacher Home Secondary School Lokoja",
+  title: "About EduPulse LMS | Modern, Distraction-Free Learning Platform",
   description:
-    "Rooted in Peace Community, Lokoja and focused on the future, we help young people build knowledge, character and courage.",
+    "Our mission is to establish the gold standard for production software engineering learning through structured courses, live cohorts, and verifiable credentials.",
 };
 
 export default function AboutPage() {
+  const pillars = [
+    {
+      title: "Distraction-Free Focus",
+      description:
+        "Learning complex concepts requires sustained attention. EduPulse removes advertising, distracting notifications, and superficial clickbait to give developers a serene, high-bandwidth environment.",
+      icon: BookOpen,
+    },
+    {
+      title: "Live Cohorts & Accountability",
+      description:
+        "Self-paced learning is elevated when paired with synchronous cohorts. Our live batches provide scheduled Zoom classes, office hours, and peer cohorts to keep learners accountable.",
+      icon: Video,
+    },
+    {
+      title: "Server-Evaluated Mastery",
+      description:
+        "Instead of cosmetic checkboxes, skill acquisition is validated through strict server-graded assessments that never leak answer keys to the client browser.",
+      icon: ShieldCheck,
+    },
+    {
+      title: "Verifiable Digital Credentials",
+      description:
+        "Every certificate issued is assigned a permanent, tamper-evident cryptographic hash. Hiring teams can verify authenticity directly in our public certificate registry.",
+      icon: Award,
+    },
+  ];
+
   return (
-    <div className="container mx-auto py-16 px-6 max-w-5xl space-y-16">
+    <div className="container mx-auto py-16 px-4 md:px-6 max-w-5xl space-y-16">
+      {/* Header */}
       <div className="space-y-4 max-w-3xl">
-        <span className="text-xs font-bold uppercase tracking-widest text-[#003366] dark:text-[#66b2ff]">
-          Our Legacy &amp; Mission
-        </span>
-        <h1 className="font-heading text-4xl md:text-5xl font-extrabold text-[#003366] dark:text-white">
-          A school built around every learner
+        <div className="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-4 py-1.5 text-xs font-semibold text-brand-700 dark:text-brand-300">
+          <Sparkles className="h-3.5 w-3.5" />
+          The EduPulse Philosophy
+        </div>
+        <h1 className="font-heading text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
+          Built for Software Architects Who Build What&apos;s Next
         </h1>
-        <p className="text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-          Rooted in Peace Community, Lokoja and focused on the future, we help young people build knowledge, character and courage from JSS1 through SSS3.
+        <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
+          EduPulse was engineered to bridge the widening chasm between superficial framework tutorials and genuine enterprise-grade engineering. Modeled after the architectural clarity of Frappe LMS, we empower engineers worldwide.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        <div className="space-y-4 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-          <h2 className="font-heading text-2xl font-bold text-[#003366] dark:text-white">
-            Purposeful Education in the Heart of Lokoja
-          </h2>
-          <p>
-            Teacher Home Secondary School was established to give families a trusted environment where strong academics and sound moral values grow together.
-          </p>
-          <p>
-            Today, our community serves approximately 180 to 200 learners through the Nigerian Educational Curriculum, enriched with practical technology, co-curricular experiences and intentional character formation.
-          </p>
-          <div className="pt-2 flex gap-4">
-            <Link
-              href="/#admissions"
-              className="inline-flex items-center gap-2 rounded-xl bg-[#990033] text-white px-5 py-3 text-xs font-bold shadow-md hover:opacity-90 transition"
-            >
-              <span>Join Our Community</span>
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-
-        <div className="relative rounded-2xl overflow-hidden shadow-xl aspect-[4/3] bg-muted">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/classroom.png"
-            alt="Teacher Home School Facilities"
-            className="h-full w-full object-cover"
-          />
-        </div>
+      {/* Grid of Pillars */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {pillars.map((p, idx) => {
+          const Icon = p.icon;
+          return (
+            <div key={idx} className="rounded-2xl border border-border bg-card p-8 space-y-4 shadow-sm hover:border-brand-500/40 transition-all">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-500/10 text-brand-600 dark:text-brand-400">
+                <Icon className="h-6 w-6" />
+              </div>
+              <h3 className="font-heading text-xl font-bold text-foreground">
+                {p.title}
+              </h3>
+              <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+                {p.description}
+              </p>
+            </div>
+          );
+        })}
       </div>
 
-      {/* 3 Pillars */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="rounded-2xl border border-[#003366]/20 bg-card p-6 space-y-3 shadow-sm">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#990033]">Our Mission</span>
-          <h3 className="font-heading text-lg font-bold text-foreground">Equipping Every Child</h3>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            To provide quality, technology-integrated education that nurtures intellectual curiosity, moral integrity, and practical skills.
+      {/* Community Callout */}
+      <div className="rounded-3xl border border-border bg-muted/30 p-8 md:p-12 space-y-6">
+        <div className="max-w-2xl space-y-3">
+          <h2 className="font-heading text-2xl md:text-3xl font-bold text-foreground">
+            An Open Ecosystem for Technical Minds
+          </h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Whether you are preparing for staff-level systems design interviews, architecting cloud Kubernetes clusters, or launching generative AI applications, EduPulse is your dedicated learning home.
           </p>
         </div>
 
-        <div className="rounded-2xl border border-[#003366]/20 bg-card p-6 space-y-3 shadow-sm">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#003366] dark:text-[#66b2ff]">Our Vision</span>
-          <h3 className="font-heading text-lg font-bold text-foreground">Virile Nation Builders</h3>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            To be Kogi State’s most trusted secondary institution, raising leaders who excel academically and contribute strength to our nation.
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-[#003366]/20 bg-card p-6 space-y-3 shadow-sm">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#990033]">Our Core Values</span>
-          <h3 className="font-heading text-lg font-bold text-foreground">Values-Led Discipline</h3>
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            Excellence, Integrity, Discipline, Technology Integration, Empathy, and Community Service guide our conduct.
-          </p>
+        <div className="flex flex-wrap items-center gap-4 pt-2">
+          <Link href="/courses">
+            <Button size="lg" className="rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs">
+              Explore Masterclasses
+            </Button>
+          </Link>
+          <Link href="/batches">
+            <Button size="lg" variant="outline" className="rounded-xl border-border font-bold text-xs">
+              Browse Live Batches
+            </Button>
+          </Link>
+          <Link href="/discussions">
+            <Button size="lg" variant="ghost" className="rounded-xl font-bold text-xs text-muted-foreground hover:text-foreground">
+              Join Community Discussions
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

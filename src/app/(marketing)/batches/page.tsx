@@ -24,7 +24,7 @@ interface BatchesPageProps {
 }
 
 export const metadata = {
-  title: "Batches & Live Classes | Teacher Home LMS",
+  title: "Batches & Live Classes | EduPulse LMS",
   description:
     "Join structured batches with scheduled live Zoom sessions, dedicated cohorts, instructor office hours, and peer discussion.",
 };
@@ -40,31 +40,31 @@ export default async function BatchesPage({ searchParams }: BatchesPageProps) {
   return (
     <div className="container py-10 px-4 md:px-6 space-y-10 max-w-7xl mx-auto">
       {/* 1. Header Banner */}
-      <div className="rounded-3xl border border-[#003366]/20 bg-gradient-to-br from-[#001f3f] via-[#003366] to-[#001f3f] text-white p-8 md:p-12 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-80 h-80 rounded-full bg-[#66b2ff]/10 blur-3xl pointer-events-none" />
+      <div className="rounded-3xl border border-brand-500/20 bg-gradient-to-br from-brand-950 via-slate-900 to-brand-950 text-white p-8 md:p-12 shadow-xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-80 h-80 rounded-full bg-brand-500/10 blur-3xl pointer-events-none" />
         <div className="relative z-10 space-y-4 max-w-2xl">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1 text-xs font-semibold backdrop-blur-md text-[#66b2ff] border border-white/10">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1 text-xs font-semibold backdrop-blur-md text-brand-300 border border-white/10">
             <Video className="h-3.5 w-3.5" />
             <span>Interactive Cohorts &amp; Live Sessions</span>
           </div>
           <h1 className="font-heading text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight">
-            Academic Batches &amp; Cohorts
+            Live Engineering Batches &amp; Cohorts
           </h1>
           <p className="text-sm md:text-base text-white/80 leading-relaxed">
-            Experience structured, calendar-based learning with your classmates. Each batch includes scheduled live Zoom/Meet lectures, instructor guidance, and interactive group discussions.
+            Experience structured, calendar-based learning with your engineering peers. Each batch includes scheduled live Zoom/Meet lectures, instructor guidance, and interactive group discussions.
           </p>
           <div className="pt-2 flex flex-wrap gap-4 text-xs font-semibold text-white/90">
             <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-[#66b2ff]" />
+              <CheckCircle2 className="h-4 w-4 text-brand-400" />
               Scheduled Timetables
             </span>
             <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-[#66b2ff]" />
+              <CheckCircle2 className="h-4 w-4 text-brand-400" />
               Direct Live Zoom Access
             </span>
             <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="h-4 w-4 text-[#66b2ff]" />
-              Teacher Home Accreditation
+              <CheckCircle2 className="h-4 w-4 text-brand-400" />
+              EduPulse Verified Accreditation
             </span>
           </div>
         </div>
@@ -85,7 +85,7 @@ export default async function BatchesPage({ searchParams }: BatchesPageProps) {
                 href={tab.id === "all" ? "/batches" : `/batches?status=${tab.id}`}
                 className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
                   isActive
-                    ? "bg-[#003366] text-white shadow-md shadow-[#003366]/20"
+                    ? "bg-brand-600 text-white shadow-md shadow-brand-600/20"
                     : "bg-muted text-muted-foreground hover:bg-accent hover:text-foreground"
                 }`}
               >
@@ -105,7 +105,7 @@ export default async function BatchesPage({ searchParams }: BatchesPageProps) {
         {batches.map((batch) => {
           const isOngoing = batch.status === "ongoing";
           const course = batch.course;
-          const instructor = batch.instructor?.profile?.full_name || "Lead Teacher";
+          const instructor = batch.instructor?.profile?.full_name || "Lead Instructor";
           const instructorAvatar =
             batch.instructor?.profile?.avatar_url ||
             "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80";
@@ -127,7 +127,7 @@ export default async function BatchesPage({ searchParams }: BatchesPageProps) {
           return (
             <div
               key={batch.id}
-              className="flex flex-col justify-between rounded-2xl border border-border bg-card shadow-sm hover:shadow-xl hover:border-[#003366]/40 transition-all duration-300 overflow-hidden group"
+              className="flex flex-col justify-between rounded-2xl border border-border bg-card shadow-sm hover:shadow-xl hover:border-brand-500/40 transition-all duration-300 overflow-hidden group"
             >
               <div className="p-6 space-y-4">
                 {/* Header Badge */}
@@ -146,13 +146,13 @@ export default async function BatchesPage({ searchParams }: BatchesPageProps) {
                 {/* Batch Title & Course Link */}
                 <div className="space-y-1.5">
                   <Link href={`/batches/${batch.id}`}>
-                    <h3 className="font-heading text-lg font-bold text-foreground group-hover:text-[#003366] dark:group-hover:text-[#66b2ff] transition-colors line-clamp-1">
+                    <h3 className="font-heading text-lg font-bold text-foreground group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-1">
                       {batch.title}
                     </h3>
                   </Link>
                   {course && (
                     <p className="text-xs text-muted-foreground flex items-center gap-1.5 line-clamp-1">
-                      <BookOpen className="h-3.5 w-3.5 text-[#003366] dark:text-[#66b2ff] shrink-0" />
+                      <BookOpen className="h-3.5 w-3.5 text-brand-600 dark:text-brand-400 shrink-0" />
                       <span>{course.title}</span>
                     </p>
                   )}
@@ -161,11 +161,11 @@ export default async function BatchesPage({ searchParams }: BatchesPageProps) {
                 {/* Live Class Timetable Box */}
                 <div className="rounded-xl border border-border/80 bg-muted/40 p-3 space-y-1.5 text-xs">
                   <div className="flex items-center gap-1.5 font-bold text-foreground">
-                    <Clock className="h-3.5 w-3.5 text-[#990033]" />
+                    <Clock className="h-3.5 w-3.5 text-rose-500" />
                     <span>Live Class Timetable</span>
                   </div>
                   <p className="text-muted-foreground font-medium">
-                    {batch.live_schedule_description || "Saturdays 10:00 AM WAT"}
+                    {batch.live_schedule_description || "Saturdays 10:00 AM UTC"}
                   </p>
                 </div>
 
@@ -175,11 +175,11 @@ export default async function BatchesPage({ searchParams }: BatchesPageProps) {
                   <img
                     src={instructorAvatar}
                     alt={instructor}
-                    className="h-8 w-8 rounded-full object-cover ring-2 ring-[#003366]/20"
+                    className="h-8 w-8 rounded-full object-cover ring-2 ring-brand-500/20"
                   />
                   <div className="flex flex-col">
                     <span className="text-xs font-bold text-foreground">{instructor}</span>
-                    <span className="text-[11px] text-muted-foreground">Class Instructor</span>
+                    <span className="text-[11px] text-muted-foreground">Cohort Lead Instructor</span>
                   </div>
                 </div>
 
@@ -193,7 +193,7 @@ export default async function BatchesPage({ searchParams }: BatchesPageProps) {
                   </div>
                   <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-[#003366] to-[#66b2ff] rounded-full"
+                      className="h-full bg-gradient-to-r from-brand-600 to-teal-400 rounded-full"
                       style={{ width: `${seatPct}%` }}
                     />
                   </div>
@@ -207,7 +207,7 @@ export default async function BatchesPage({ searchParams }: BatchesPageProps) {
                     href={batch.live_class_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-[#990033] to-[#7a0029] text-white px-3 py-2 text-xs font-bold shadow-sm hover:opacity-95 transition-opacity"
+                    className="flex-1 flex items-center justify-center gap-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white px-3 py-2 text-xs font-bold shadow-sm transition-colors"
                   >
                     <Video className="h-3.5 w-3.5" />
                     <span>Join Live</span>
@@ -215,7 +215,7 @@ export default async function BatchesPage({ searchParams }: BatchesPageProps) {
                 )}
                 <Link
                   href={`/batches/${batch.id}`}
-                  className="flex-1 flex items-center justify-center gap-1 rounded-xl border border-[#003366]/30 bg-card px-3 py-2 text-xs font-bold text-[#003366] dark:text-white hover:bg-accent transition-colors"
+                  className="flex-1 flex items-center justify-center gap-1 rounded-xl border border-border bg-card px-3 py-2 text-xs font-bold text-foreground hover:bg-accent transition-colors"
                 >
                   <span>Batch Hub</span>
                   <ArrowRight className="h-3.5 w-3.5" />

@@ -1,15 +1,28 @@
-import { SchoolLanding } from "@/components/home/school-landing";
+import { LMSLanding } from "@/components/home/lms-landing";
+import { dataStore } from "@/lib/db/data-store";
 
 export const metadata = {
-  title: "Teacher Home Secondary School | Lokoja",
+  title: "EduPulse LMS | Modern, Distraction-Free Learning Platform",
   description:
-    "Educate A Child & Build A Virile Nation. Quality, technology-integrated secondary education from JSS1 to SSS3 in Peace Community, Lokoja, Kogi State.",
+    "Master production software engineering with structured curriculums, live Zoom cohorts, distraction-free reading, and verifiable certificates.",
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [courses, batches, discussions, categories] = await Promise.all([
+    dataStore.getCourses({ sort: "popular" }),
+    dataStore.getBatches(),
+    dataStore.getDiscussions(),
+    dataStore.getCategories(),
+  ]);
+
   return (
     <main className="min-h-screen flex flex-col">
-      <SchoolLanding />
+      <LMSLanding
+        courses={courses}
+        batches={batches}
+        discussions={discussions}
+        categories={categories}
+      />
     </main>
   );
 }

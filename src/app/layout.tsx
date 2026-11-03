@@ -10,14 +10,18 @@ import { Toaster } from "sonner";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Teacher Home Secondary School | Lokoja",
+  title: "EduPulse LMS | Modern, Distraction-Free Learning Platform",
   description:
-    "Educate A Child & Build A Virile Nation. Quality, technology-integrated secondary education from JSS1 to SSS3 in Peace Community, Lokoja, Kogi State.",
-  icons: {
-    icon: "/assets/favicon.jpeg",
-    shortcut: "/assets/favicon.jpeg",
-    apple: "/assets/logo.png",
-  },
+    "Empower your technical career with structured masterclasses, live Zoom cohort batches, interactive assessments, community discussions, and verifiable certificates.",
+  keywords: [
+    "LMS",
+    "Learning Management System",
+    "Frappe LMS",
+    "Software Engineering Courses",
+    "Live Batches",
+    "Interactive Quizzes",
+    "Certificates",
+  ],
 };
 
 export default async function RootLayout({
@@ -29,19 +33,6 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="icon" href="/assets/favicon.jpeg" type="image/jpeg" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap"
-          rel="stylesheet"
-        />
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        />
-      </head>
       <body className={`${inter.variable} font-sans min-h-screen flex flex-col bg-background text-foreground`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <Navbar session={session} />

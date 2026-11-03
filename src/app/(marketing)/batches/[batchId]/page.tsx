@@ -29,8 +29,8 @@ export async function generateMetadata({ params }: BatchDetailPageProps) {
   const batch = await dataStore.getBatchById(params.batchId);
   if (!batch) return { title: "Batch Not Found" };
   return {
-    title: `${batch.title} | Teacher Home LMS`,
-    description: `Academic batch and live classes for ${batch.title}.`,
+    title: `${batch.title} | EduPulse LMS`,
+    description: `Engineering batch and live classes for ${batch.title}.`,
   };
 }
 
@@ -73,7 +73,7 @@ export default async function BatchDetailPage({ params }: BatchDetailPageProps) 
       </div>
 
       {/* Hero Header Card */}
-      <div className="rounded-3xl border border-[#003366]/20 bg-gradient-to-r from-[#001f3f] via-[#003366] to-[#001f3f] text-white p-8 md:p-10 shadow-xl relative overflow-hidden">
+      <div className="rounded-3xl border border-brand-500/20 bg-gradient-to-r from-brand-950 via-slate-900 to-brand-950 text-white p-8 md:p-10 shadow-xl relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-3 max-w-2xl">
             <div className="flex flex-wrap items-center gap-2">
@@ -94,7 +94,7 @@ export default async function BatchDetailPage({ params }: BatchDetailPageProps) 
 
             {course && (
               <p className="text-sm text-white/90 flex items-center gap-2">
-                <BookOpen className="h-4 w-4 text-[#66b2ff]" />
+                <BookOpen className="h-4 w-4 text-brand-400" />
                 <span>Curriculum: <strong className="text-white">{course.title}</strong></span>
               </p>
             )}
@@ -108,7 +108,7 @@ export default async function BatchDetailPage({ params }: BatchDetailPageProps) 
               />
               <div className="flex flex-col text-xs">
                 <span className="font-bold text-white">{instructor}</span>
-                <span className="text-white/70">Class Lead &amp; Mentor</span>
+                <span className="text-white/70">Cohort Lead &amp; Mentor</span>
               </div>
             </div>
           </div>
@@ -116,11 +116,11 @@ export default async function BatchDetailPage({ params }: BatchDetailPageProps) 
           {/* Action Callout */}
           <div className="rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md space-y-4 shrink-0 md:w-72">
             <div className="space-y-1">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#66b2ff]">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-brand-300">
                 Live Class Schedule
               </span>
               <p className="text-sm font-semibold text-white">
-                {batch.live_schedule_description || "Saturdays 10:00 AM WAT"}
+                {batch.live_schedule_description || "Saturdays 10:00 AM UTC"}
               </p>
             </div>
 
@@ -129,7 +129,7 @@ export default async function BatchDetailPage({ params }: BatchDetailPageProps) 
                 href={batch.live_class_url}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#990033] to-[#7a0029] text-white py-3 text-xs font-bold shadow-lg hover:opacity-95 transition-all"
+                className="flex items-center justify-center gap-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white py-3 text-xs font-bold shadow-lg transition-all"
               >
                 <Video className="h-4 w-4" />
                 <span>Join Zoom Live Session</span>
@@ -244,7 +244,7 @@ export default async function BatchDetailPage({ params }: BatchDetailPageProps) 
         <div className="space-y-6">
           <div className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-4">
             <h3 className="font-heading text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-              <Users className="h-4 w-4 text-[#003366] dark:text-[#66b2ff]" />
+              <Users className="h-4 w-4 text-brand-600 dark:text-brand-400" />
               <span>Cohort Roster &amp; Capacity</span>
             </h3>
 
@@ -257,7 +257,7 @@ export default async function BatchDetailPage({ params }: BatchDetailPageProps) 
               </div>
               <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-[#003366] to-[#66b2ff] rounded-full"
+                  className="h-full bg-gradient-to-r from-brand-600 to-teal-400 rounded-full"
                   style={{
                     width: `${Math.round(
                       (batch.enrolled_count / (batch.max_seats || 40)) * 100
@@ -267,19 +267,19 @@ export default async function BatchDetailPage({ params }: BatchDetailPageProps) 
               </div>
             </div>
 
-            <div className="rounded-xl bg-[#e9f5ff] dark:bg-slate-800/60 p-3 space-y-1 text-xs">
-              <span className="font-bold text-[#003366] dark:text-[#66b2ff]">
+            <div className="rounded-xl bg-brand-500/10 p-3 space-y-1 text-xs">
+              <span className="font-bold text-brand-600 dark:text-brand-400">
                 Need Batch Assistance?
               </span>
               <p className="text-muted-foreground text-[11px] leading-relaxed">
-                Contact Teacher Home academic support at info@teacherhomeschool.com for cohort scheduling adjustments or lab access inquiries.
+                Contact EduPulse cohort operations at cohorts@edupulse.io for timetable adjustments or team group enrolments.
               </p>
             </div>
           </div>
 
           <div className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-4">
             <h3 className="font-heading text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-              <MessageSquare className="h-4 w-4 text-[#990033]" />
+              <MessageSquare className="h-4 w-4 text-teal-500" />
               <span>Cohort Discussions</span>
             </h3>
             <p className="text-xs text-muted-foreground leading-relaxed">

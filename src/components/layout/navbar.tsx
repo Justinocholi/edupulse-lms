@@ -6,15 +6,18 @@ import { usePathname } from "next/navigation";
 import {
   Menu,
   X,
-  Phone,
-  Mail,
-  MapPin,
   ExternalLink,
   GraduationCap,
   Shield,
   LayoutDashboard,
   LogOut,
   ChevronDown,
+  BookOpen,
+  Video,
+  MessageSquare,
+  Award,
+  Sparkles,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
@@ -28,133 +31,71 @@ export function Navbar({ session }: { session: AuthSession }) {
   const [userDropdownOpen, setUserDropdownOpen] = React.useState(false);
 
   const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/courses", label: "Courses" },
-    { href: "/batches", label: "Batches & Live" },
-    { href: "/discussions", label: "Discussions" },
-    { href: "/certificates", label: "Certifications" },
-    { href: "/portal", label: "Portals" },
-    { href: "/#admissions", label: "Admissions" },
-    { href: "/#contact", label: "Contact" },
+    { href: "/courses", label: "Courses", icon: BookOpen },
+    { href: "/batches", label: "Batches & Live", icon: Video },
+    { href: "/discussions", label: "Discussions", icon: MessageSquare },
+    { href: "/certificates", label: "Certifications", icon: Award },
+    { href: "/instructors", label: "Instructors", icon: Users },
+    { href: "/about", label: "About" },
   ];
 
   return (
-    <>
-      {/* 1. School Top Bar */}
-      <div className="hidden lg:block bg-gradient-to-r from-[#001f3f] via-[#003366] to-[#001f3f] text-white text-[12px] font-semibold tracking-wide border-b border-[#66b2ff]/20">
-        <div className="container mx-auto flex h-9 items-center justify-between px-6">
-          <div className="flex items-center gap-6">
-            <a
-              href="tel:+2348031234567"
-              className="flex items-center gap-2 hover:text-[#66b2ff] transition-colors"
-            >
-              <Phone className="h-3.5 w-3.5 text-[#66b2ff]" />
-              <span>+234 803 123 4567</span>
-            </a>
-            <a
-              href="mailto:info@teacherhomeschool.com"
-              className="flex items-center gap-2 hover:text-[#66b2ff] transition-colors"
-            >
-              <Mail className="h-3.5 w-3.5 text-[#66b2ff]" />
-              <span>info@teacherhomeschool.com</span>
-            </a>
+    <header className="sticky top-0 z-40 w-full border-b border-border/80 bg-background/95 backdrop-blur-md shadow-sm">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+        {/* Brand Logo */}
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-brand-600 via-brand-500 to-teal-400 text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
+            <Sparkles className="h-5 w-5 fill-current" />
           </div>
-
-          <div className="flex items-center gap-6">
-            <span className="flex items-center gap-1.5 text-white/90">
-              <MapPin className="h-3.5 w-3.5 text-[#66b2ff]" />
-              <span>Peace Community, Lokoja, Kogi State</span>
+          <div className="flex flex-col">
+            <span className="font-heading text-lg md:text-xl font-extrabold tracking-tight text-foreground leading-none">
+              Edu<span className="text-brand-600 dark:text-brand-400">Pulse</span>
             </span>
-
-            {/* External Staff Portal Link */}
-            <a
-              href="/admin"
-              className="flex items-center gap-1 text-[#66b2ff] font-bold hover:text-white transition-colors"
-              title="Teacher Home Staff & Administration Portal"
-            >
-              <Shield className="h-3.5 w-3.5" />
-              <span>Staff Portal</span>
-              <ExternalLink className="h-3 w-3 ml-0.5 opacity-80" />
-            </a>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-0.5">
+              LMS Platform
+            </span>
           </div>
-        </div>
-      </div>
+        </Link>
 
-      {/* 2. Main Sticky Header */}
-      <header className="sticky top-0 z-40 w-full border-b border-[#003366]/10 bg-white/95 dark:bg-[#0a1320]/95 backdrop-blur-md shadow-sm">
-        <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-          {/* Logo & Crest */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-12 w-12 rounded-xl bg-gradient-to-tr from-[#003366] to-[#004a99] p-1 shadow-md shadow-[#003366]/20 transition-transform group-hover:scale-105 flex items-center justify-center overflow-hidden border border-[#990033]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/assets/logo.png"
-                alt="Teacher Home Crest"
-                className="h-full w-full object-contain"
-              />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-heading text-xl md:text-2xl font-extrabold tracking-tight text-[#003366] dark:text-white leading-none">
-                Teacher Home
-              </span>
-              <span className="text-[10px] md:text-[11px] font-bold uppercase tracking-[0.18em] text-[#990033] dark:text-[#ff6685] mt-1">
-                Secondary School
-              </span>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation Links */}
-          <nav className="hidden xl:flex items-center gap-1">
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
-                    isActive
-                      ? "text-[#003366] dark:text-white font-extrabold border-b-2 border-[#990033]"
-                      : "text-slate-700 dark:text-slate-300 hover:text-[#003366] dark:hover:text-white hover:bg-[#e9f5ff] dark:hover:bg-slate-800/60"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Action Buttons & Portal Links */}
-          <div className="flex items-center gap-2.5">
-            <ThemeToggle />
-
-            {/* School Portal External Access Links */}
-            <div className="hidden sm:flex items-center gap-2">
-              <a
-                href="https://forms.google.com"
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-lg border border-[#003366]/20 px-3.5 py-2 text-xs font-bold text-[#003366] dark:text-white hover:bg-[#e9f5ff] dark:hover:bg-slate-800 transition-colors shadow-sm"
-              >
-                Enroll Now
-              </a>
-
-              {/* Student Portal & Results Link */}
+        {/* Desktop Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-1">
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href || pathname.startsWith(`${link.href}/`);
+            return (
               <Link
-                href="/dashboard"
-                className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#990033] to-[#7a0029] text-white px-4 py-2 text-xs font-bold shadow-md shadow-[#990033]/25 hover:opacity-95 hover:shadow-lg transition-all"
+                key={link.label}
+                href={link.href}
+                className={`rounded-xl px-3.5 py-2 text-xs font-semibold transition-all ${
+                  isActive
+                    ? "bg-brand-500/10 text-brand-600 dark:text-brand-400 font-bold"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                }`}
               >
-                <GraduationCap className="h-3.5 w-3.5" />
-                <span>Student Portal</span>
-                <ExternalLink className="h-3 w-3 ml-0.5 opacity-80" />
+                {link.label}
               </Link>
-            </div>
+            );
+          })}
+        </nav>
 
-            {/* Authenticated User Menu Dropdown */}
-            {session?.user && (
+        {/* Actions & Auth */}
+        <div className="flex items-center gap-3">
+          <ThemeToggle />
+
+          {session?.user ? (
+            /* Logged In User */
+            <div className="flex items-center gap-2">
+              <Link href="/dashboard" className="hidden sm:inline-flex">
+                <Button variant="outline" size="sm" className="rounded-xl text-xs font-semibold">
+                  <LayoutDashboard className="mr-1.5 h-3.5 w-3.5 text-brand-500" />
+                  <span>My Learning</span>
+                </Button>
+              </Link>
+
+              {/* User Dropdown */}
               <div className="relative">
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="flex items-center gap-2 rounded-full p-1 transition hover:ring-2 hover:ring-[#003366]/30"
+                  className="flex items-center gap-2 rounded-full p-1 transition hover:ring-2 hover:ring-brand-500/30"
                   aria-label="User menu"
                 >
                   <Avatar
@@ -162,63 +103,73 @@ export function Navbar({ session }: { session: AuthSession }) {
                     fallback={session.user.full_name}
                     size="sm"
                   />
-                  <div className="hidden md:flex flex-col text-left">
-                    <span className="text-xs font-semibold text-foreground leading-tight truncate max-w-[100px]">
-                      {session.user.full_name}
-                    </span>
-                    <span className="text-[10px] text-muted-foreground uppercase font-mono tracking-wider">
-                      {session.role}
-                    </span>
-                  </div>
-                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+                  <ChevronDown className="h-3.5 w-3.5 text-muted-foreground hidden sm:block" />
                 </button>
 
                 {userDropdownOpen && (
                   <div
-                    className="absolute right-0 mt-2 w-64 rounded-xl border border-border bg-card p-2 shadow-xl ring-1 ring-black/5 animate-in fade-in zoom-in-95"
+                    className="absolute right-0 mt-2 w-64 rounded-2xl border border-border bg-card p-2 shadow-xl ring-1 ring-black/5 animate-in fade-in zoom-in-95 z-50"
                     onClick={() => setUserDropdownOpen(false)}
                   >
-                    <div className="border-b border-border/60 px-3 py-2">
-                      <p className="text-sm font-semibold text-foreground truncate">{session.user.full_name}</p>
+                    <div className="border-b border-border/60 px-3 py-2.5">
+                      <p className="text-sm font-bold text-foreground truncate">
+                        {session.user.full_name}
+                      </p>
                       <p className="text-xs text-muted-foreground truncate">{session.user.email}</p>
                       <div className="mt-2">
                         <Badge variant={session.role === "admin" ? "brand" : "secondary"}>
-                          {session.role === "admin" ? "Staff / Administrator" : "Student"}
+                          {session.role === "admin" ? "Platform Administrator" : "Student / Learner"}
                         </Badge>
                       </div>
                     </div>
 
-                    <div className="py-1">
+                    <div className="py-1 text-xs">
                       <Link
                         href="/dashboard"
-                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-foreground hover:bg-accent"
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-foreground hover:bg-accent font-medium"
                       >
-                        <LayoutDashboard className="h-4 w-4 text-[#003366]" />
-                        Student Dashboard
+                        <LayoutDashboard className="h-4 w-4 text-brand-500" />
+                        <span>Student Dashboard</span>
+                      </Link>
+
+                      <Link
+                        href="/batches"
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-foreground hover:bg-accent font-medium"
+                      >
+                        <Video className="h-4 w-4 text-[#990033]" />
+                        <span>My Batches &amp; Live Classes</span>
+                      </Link>
+
+                      <Link
+                        href="/dashboard/certificates"
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-foreground hover:bg-accent font-medium"
+                      >
+                        <Award className="h-4 w-4 text-amber-500" />
+                        <span>Earned Certificates</span>
                       </Link>
 
                       {session.role === "admin" && (
                         <Link
                           href="/admin"
-                          className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-[#003366] dark:text-[#66b2ff] font-medium hover:bg-[#e9f5ff] dark:hover:bg-slate-800"
+                          className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-brand-600 dark:text-brand-400 font-bold hover:bg-brand-500/10"
                         >
-                          <Shield className="h-4 w-4 text-[#990033]" />
-                          Admin Console
+                          <Shield className="h-4 w-4" />
+                          <span>Admin Console</span>
                         </Link>
                       )}
 
                       <Link
                         href="/dashboard/settings"
-                        className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+                        className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-muted-foreground hover:bg-accent hover:text-foreground font-medium"
                       >
-                        Settings
+                        <span>Account Settings</span>
                       </Link>
                     </div>
 
                     <div className="border-t border-border/60 pt-1">
                       <Link
                         href="/logout"
-                        className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold text-destructive hover:bg-destructive/10 transition-colors"
+                        className="flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-destructive hover:bg-destructive/10 transition-colors"
                       >
                         <LogOut className="h-3.5 w-3.5" />
                         <span>Sign Out</span>
@@ -227,68 +178,104 @@ export function Navbar({ session }: { session: AuthSession }) {
                   </div>
                 )}
               </div>
-            )}
+            </div>
+          ) : (
+            /* Unauthenticated Visitor */
+            <div className="flex items-center gap-2">
+              <Link href="/login">
+                <Button variant="ghost" size="sm" className="rounded-xl text-xs font-semibold">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/register">
+                <Button
+                  size="sm"
+                  className="rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold shadow-md shadow-brand-600/20"
+                >
+                  Get Started
+                </Button>
+              </Link>
+            </div>
+          )}
 
-            {/* Mobile Menu Toggle Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-[#003366]/20 bg-white dark:bg-slate-900 text-[#003366] dark:text-white"
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden flex h-9 w-9 items-center justify-center rounded-xl border border-border bg-card text-foreground"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu Dropdown */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden border-b border-border bg-card px-6 py-4 space-y-3 animate-in slide-in-from-top-4">
+          <nav className="flex flex-col space-y-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-xl px-3 py-2 text-xs font-bold text-foreground hover:bg-accent"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="border-t border-border/80 pt-3 flex flex-col gap-2">
+            {session?.user ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-brand-600 text-white py-2 text-xs font-bold"
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  <span>Student Dashboard</span>
+                </Link>
+                {session.role === "admin" && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center gap-2 rounded-xl border border-border py-2 text-xs font-bold text-foreground"
+                  >
+                    <Shield className="h-4 w-4 text-brand-500" />
+                    <span>Admin Console</span>
+                  </Link>
+                )}
+                <Link
+                  href="/logout"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 rounded-xl border border-destructive/30 text-destructive py-2 text-xs font-bold"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Sign Out</span>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center rounded-xl border border-border py-2 text-xs font-bold text-foreground"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-center rounded-xl bg-brand-600 text-white py-2 text-xs font-bold"
+                >
+                  Create Free Account
+                </Link>
+              </>
+            )}
           </div>
         </div>
-
-        {/* Mobile Slide-Down Menu */}
-        {mobileMenuOpen && (
-          <div className="xl:hidden border-b border-[#003366]/10 bg-white dark:bg-[#0a1320] px-6 py-6 space-y-4 animate-in slide-in-from-top-4">
-            <nav className="flex flex-col space-y-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="rounded-lg px-3 py-2.5 text-sm font-bold text-slate-800 dark:text-slate-200 hover:bg-[#e9f5ff] dark:hover:bg-slate-800 hover:text-[#003366]"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-
-            <div className="border-t border-[#003366]/10 pt-4 flex flex-col gap-2.5">
-              <Link
-                href="/dashboard"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#990033] to-[#7a0029] text-white py-2.5 text-xs font-bold shadow-md"
-              >
-                <GraduationCap className="h-4 w-4" />
-                <span>Student Portal (Check Results)</span>
-                <ExternalLink className="h-3 w-3 opacity-80" />
-              </Link>
-
-              <Link
-                href="/admin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 rounded-xl border border-[#003366]/20 bg-[#003366] text-white py-2.5 text-xs font-bold"
-              >
-                <Shield className="h-4 w-4 text-[#66b2ff]" />
-                <span>Staff Portal</span>
-                <ExternalLink className="h-3 w-3 opacity-80" />
-              </Link>
-
-              <a
-                href="https://forms.google.com"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center justify-center rounded-xl border border-[#003366]/30 py-2.5 text-xs font-bold text-[#003366] dark:text-white hover:bg-[#e9f5ff]"
-              >
-                Apply for Admission
-              </a>
-            </div>
-          </div>
-        )}
-      </header>
-    </>
+      )}
+    </header>
   );
 }

@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: CertificateVerifyProps) {
   const cert = await dataStore.getCertificateByCode(params.code);
   if (!cert) return { title: "Certificate Not Found" };
   return {
-    title: `Verified Certificate: ${cert.recipient_name} | Teacher Home LMS`,
+    title: `Verified Certificate: ${cert.recipient_name} | EduPulse LMS`,
     description: `Official verified certificate for ${cert.recipient_name} completing ${cert.course_title}.`,
   };
 }
@@ -52,7 +52,7 @@ export default async function CertificateVerifyPage({ params }: CertificateVerif
             </Button>
           </Link>
           <Link href="/courses">
-            <Button size="sm" className="bg-[#003366] text-white">
+            <Button size="sm" className="bg-brand-600 hover:bg-brand-700 text-white">
               Explore Courses
             </Button>
           </Link>
@@ -78,7 +78,7 @@ export default async function CertificateVerifyPage({ params }: CertificateVerif
           <div>
             <h2 className="font-bold text-sm sm:text-base">Official Verified Credential</h2>
             <p className="text-xs text-muted-foreground">
-              Authenticated on Teacher Home Secondary School immutable registry. Tamper-evident academic record.
+              Authenticated on EduPulse LMS immutable registry. Tamper-evident academic credential.
             </p>
           </div>
         </div>
@@ -92,53 +92,45 @@ export default async function CertificateVerifyPage({ params }: CertificateVerif
       </div>
 
       {/* Official Certificate Canvas Frame */}
-      <div className="relative rounded-3xl border-8 border-double border-[#003366]/30 bg-gradient-to-b from-[#faf7f2] via-card to-[#f4f9fe] dark:from-[#0a1320] dark:via-[#001f3f]/40 dark:to-[#0a1320] p-8 md:p-14 shadow-2xl text-center overflow-hidden">
+      <div className="relative rounded-3xl border-8 border-double border-brand-500/30 bg-gradient-to-b from-card via-card to-brand-500/[0.04] p-8 md:p-14 shadow-2xl text-center overflow-hidden">
         {/* Subtle Watermark seal */}
         <div className="absolute -right-16 -bottom-16 opacity-5 pointer-events-none">
-          <Award className="h-96 w-96 text-[#003366]" />
+          <Award className="h-96 w-96 text-brand-600" />
         </div>
 
         {/* Certificate Branding Header */}
         <div className="flex flex-col items-center justify-center gap-2 mb-6">
-          <div className="relative h-16 w-16 rounded-2xl bg-gradient-to-tr from-[#003366] to-[#004a99] p-1.5 shadow-md border border-[#990033] flex items-center justify-center overflow-hidden mb-1">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/assets/logo.png"
-              alt="Teacher Home Crest"
-              className="h-full w-full object-contain"
-            />
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-brand-600 via-brand-500 to-teal-400 text-white shadow-md shadow-brand-500/20 mb-1">
+            <Sparkles className="h-7 w-7 fill-current" />
           </div>
-          <span className="font-heading text-2xl md:text-3xl font-extrabold tracking-tight text-[#003366] dark:text-white">
-            Teacher Home Secondary School
+          <span className="font-heading text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
+            EduPulse Academy
           </span>
-          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#990033] dark:text-[#ff6685]">
-            Peace Community, Lokoja, Kogi State • EduPulse LMS
+          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-600 dark:text-brand-400">
+            Professional Engineering Credential • Frappe LMS Verified
           </span>
-          <p className="text-[10px] italic text-muted-foreground">
-            &ldquo;Educate A Child &amp; Build A Virile Nation&rdquo;
-          </p>
         </div>
 
-        <div className="inline-block border-y border-[#990033]/30 py-1.5 px-6 my-2">
-          <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#990033] dark:text-[#ff6685]">
-            Certificate of Completion &amp; Academic Merit
+        <div className="inline-block border-y border-brand-500/30 py-1.5 px-6 my-2">
+          <p className="text-xs font-bold uppercase tracking-[0.25em] text-brand-600 dark:text-brand-400">
+            Certificate of Specialization &amp; Mastery
           </p>
         </div>
 
         <p className="text-xs text-muted-foreground mt-4 mb-2">
-          This is proudly conferred upon
+          This certifies that
         </p>
 
-        <h3 className="font-heading text-3xl md:text-5xl font-extrabold text-[#003366] dark:text-white tracking-tight my-4">
+        <h3 className="font-heading text-3xl md:text-5xl font-extrabold text-foreground tracking-tight my-4">
           {cert.recipient_name}
         </h3>
 
         <p className="text-xs md:text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed mb-6">
-          for successfully satisfying all curriculum milestones, laboratory demonstrations, and passing the rigorous assessment examinations in
+          has successfully satisfied all curriculum milestones, laboratory assignments, and passed the rigorous server-graded assessments in
         </p>
 
-        <div className="my-6 inline-block rounded-2xl border border-[#003366]/30 bg-[#003366]/5 dark:bg-[#003366]/20 px-8 py-4">
-          <h4 className="font-heading text-xl md:text-2xl font-bold text-[#003366] dark:text-[#66b2ff]">
+        <div className="my-6 inline-block rounded-2xl border border-brand-500/30 bg-brand-500/5 dark:bg-brand-500/10 px-8 py-4">
+          <h4 className="font-heading text-xl md:text-2xl font-bold text-brand-600 dark:text-brand-400">
             {cert.course_title}
           </h4>
         </div>
@@ -153,10 +145,10 @@ export default async function CertificateVerifyPage({ params }: CertificateVerif
         {/* Certificate Signatures & Code Footer */}
         <div className="mt-12 pt-8 border-t border-border/80 grid grid-cols-1 md:grid-cols-3 gap-6 items-end text-xs text-muted-foreground">
           <div className="space-y-1">
-            <div className="font-serif italic text-base text-foreground font-semibold">
+            <div className="font-mono italic text-base text-foreground font-semibold">
               {cert.instructor_name}
             </div>
-            <p className="text-[11px] uppercase tracking-wider font-semibold">Lead Instructor / Principal</p>
+            <p className="text-[11px] uppercase tracking-wider font-semibold">Lead Instructor / Curriculum Director</p>
           </div>
 
           <div className="flex flex-col items-center space-y-1">

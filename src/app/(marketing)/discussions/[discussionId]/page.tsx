@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: DiscussionDetailPageProps) {
   const thread = await dataStore.getDiscussionById(params.discussionId);
   if (!thread) return { title: "Discussion Not Found" };
   return {
-    title: `${thread.title} | Teacher Home Discussions`,
+    title: `${thread.title} | EduPulse Discussions`,
     description: thread.content.slice(0, 160),
   };
 }

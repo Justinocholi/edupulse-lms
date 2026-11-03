@@ -1,100 +1,117 @@
-import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { Mail, MessageSquare, Terminal, Video, HelpCircle, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const metadata = {
-  title: "Contact Us | Teacher Home Secondary School Lokoja",
+  title: "Contact & Support | EduPulse LMS",
   description:
-    "Ask a question, schedule an on-campus tour, or enquire about 2026/2027 admissions in Peace Community, Lokoja.",
+    "Get in touch with the EduPulse LMS platform team for course inquiries, enterprise cohort training, or technical assistance.",
 };
 
 export default function ContactPage() {
   return (
-    <div className="container mx-auto py-16 px-6 max-w-5xl space-y-16">
+    <div className="container mx-auto py-16 px-4 md:px-6 max-w-5xl space-y-16">
       <div className="space-y-4 max-w-3xl">
-        <span className="text-xs font-bold uppercase tracking-widest text-[#003366] dark:text-[#66b2ff]">
-          Get In Touch
+        <span className="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">
+          EduPulse Support &amp; Partnerships
         </span>
-        <h1 className="font-heading text-4xl md:text-5xl font-extrabold text-[#003366] dark:text-white">
-          We would love to meet your family
+        <h1 className="font-heading text-4xl md:text-5xl font-extrabold text-foreground">
+          How Can We Help You?
         </h1>
-        <p className="text-base text-slate-700 dark:text-slate-300 leading-relaxed">
-          Ask a question, schedule an on-campus tour, or enquire about admissions in Peace Community, Lokoja.
+        <p className="text-base text-muted-foreground leading-relaxed">
+          Have questions about a course curriculum, joining a live cohort batch, enterprise licensing, or teaching on EduPulse? Our team is here to help.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <div className="rounded-2xl border border-border bg-card p-6 md:p-8 space-y-6 shadow-sm">
-          <h2 className="font-heading text-xl font-bold text-foreground">
-            School Address &amp; Hours
-          </h2>
-          <div className="space-y-4 text-xs md:text-sm text-slate-700 dark:text-slate-300">
-            <div className="flex items-start gap-3">
-              <MapPin className="h-5 w-5 text-[#003366] dark:text-[#66b2ff] shrink-0 mt-0.5" />
+        {/* Support Channels */}
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-border bg-card p-6 space-y-4 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500/10 text-brand-600">
+                <HelpCircle className="h-5 w-5" />
+              </div>
               <div>
-                <p className="font-bold text-foreground">Teacher Home Secondary School</p>
-                <p className="text-muted-foreground">Peace Community, Lokoja, Kogi State, Nigeria</p>
+                <h3 className="font-bold text-sm text-foreground">Course &amp; Lesson Support</h3>
+                <p className="text-xs text-muted-foreground">Stuck on a specific lesson or quiz problem?</p>
               </div>
             </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Post directly inside our <a href="/discussions" className="text-brand-600 dark:text-brand-400 font-semibold hover:underline">Community Discussions</a> forum to get guidance from course instructors and fellow engineers.
+            </p>
+          </div>
 
+          <div className="rounded-2xl border border-border bg-card p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <Phone className="h-5 w-5 text-[#003366] dark:text-[#66b2ff] shrink-0" />
-              <a href="tel:+2348031234567" className="hover:underline">
-                +234 803 123 4567
-              </a>
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-500/10 text-rose-600">
+                <Video className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-sm text-foreground">Live Cohorts &amp; Batches</h3>
+                <p className="text-xs text-muted-foreground">Inquiries regarding Zoom schedules and batch enrollment</p>
+              </div>
             </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Need assistance scheduling a private team cohort or adjusting your batch timetable? Reach out to <span className="font-mono text-foreground font-semibold">cohorts@edupulse.io</span>.
+            </p>
+          </div>
 
+          <div className="rounded-2xl border border-border bg-card p-6 space-y-4 shadow-sm">
             <div className="flex items-center gap-3">
-              <Mail className="h-5 w-5 text-[#003366] dark:text-[#66b2ff] shrink-0" />
-              <a href="mailto:info@teacherhomeschool.com" className="hover:underline">
-                info@teacherhomeschool.com
-              </a>
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600">
+                <Mail className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-sm text-foreground">Platform Administration</h3>
+                <p className="text-xs text-muted-foreground">Partnership, licensing, and general inquiries</p>
+              </div>
             </div>
-
-            <div className="flex items-center gap-3">
-              <Clock className="h-5 w-5 text-[#003366] dark:text-[#66b2ff] shrink-0" />
-              <span>Monday – Friday: 7:30 AM – 3:30 PM</span>
-            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              For institutional licensing and instructor onboarding: <span className="font-mono text-foreground font-semibold">support@edupulse.io</span>
+            </p>
           </div>
         </div>
 
-        {/* Direct Email Form */}
+        {/* Direct Enquiry Form */}
         <div className="rounded-2xl border border-border bg-card p-6 md:p-8 space-y-4 shadow-sm">
-          <h2 className="font-heading text-xl font-bold text-foreground">Send an Enquiry</h2>
+          <h2 className="font-heading text-xl font-bold text-foreground">Send Us a Direct Message</h2>
           <form
-            action="mailto:info@teacherhomeschool.com"
+            action="mailto:support@edupulse.io"
             method="GET"
             className="space-y-4"
           >
             <div className="space-y-1">
-              <label className="text-xs font-semibold text-foreground">Your Name</label>
+              <label className="text-xs font-semibold text-foreground">Full Name</label>
               <input
                 name="name"
                 required
-                placeholder="Parent / Guardian Name"
-                className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs"
+                placeholder="Jane Doe"
+                className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-brand-500"
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-foreground">Email</label>
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  placeholder="name@example.com"
-                  className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-foreground">Phone</label>
-                <input
-                  name="phone"
-                  type="tel"
-                  placeholder="080 1234 5678"
-                  className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs"
-                />
-              </div>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-foreground">Work Email</label>
+              <input
+                name="email"
+                type="email"
+                required
+                placeholder="jane@company.com"
+                className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-brand-500"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-foreground">Inquiry Category</label>
+              <select
+                name="category"
+                className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-brand-500"
+              >
+                <option value="course_support">Course Curriculum Support</option>
+                <option value="batch_cohort">Live Batch &amp; Cohort Inquiries</option>
+                <option value="enterprise_team">Enterprise Team Training</option>
+                <option value="instructor_application">Apply to Teach on EduPulse</option>
+                <option value="other">Other Inquiry</option>
+              </select>
             </div>
 
             <div className="space-y-1">
@@ -103,14 +120,14 @@ export default function ContactPage() {
                 name="body"
                 required
                 rows={4}
-                placeholder="Please describe how we can assist you..."
-                className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs"
+                placeholder="How can we assist you or your engineering team?"
+                className="w-full rounded-xl border border-input bg-background px-3 py-2 text-xs outline-none focus:ring-2 focus:ring-brand-500"
               />
             </div>
 
             <Button
               type="submit"
-              className="w-full rounded-xl bg-[#003366] text-white hover:bg-[#002a54] font-bold text-xs"
+              className="w-full rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs"
             >
               Submit Message
             </Button>

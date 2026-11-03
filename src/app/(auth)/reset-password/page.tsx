@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2, ArrowRight } from "lucide-react";
+import { Loader2, ArrowRight, Sparkles } from "lucide-react";
 import { resetPasswordAction } from "@/lib/auth/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,17 +65,16 @@ export default function ResetPasswordPage() {
     <div className="container flex min-h-[calc(100vh-8rem)] items-center justify-center py-12 px-4">
       <div className="w-full max-w-md space-y-6">
         <div className="text-center space-y-3">
-          <Link href="/" className="inline-flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#003366] text-white shadow-md p-1 border border-[#990033]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/assets/logo.png" alt="Teacher Home Crest" className="h-full w-full object-contain" />
+          <Link href="/" className="inline-flex items-center gap-2.5">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-brand-600 via-brand-500 to-teal-400 text-white shadow-md shadow-brand-500/20">
+              <Sparkles className="h-6 w-6 fill-current" />
             </div>
             <div className="flex flex-col text-left">
-              <span className="font-heading text-xl font-bold tracking-tight text-[#003366] dark:text-white leading-none">
-                Teacher Home
+              <span className="font-heading text-xl font-extrabold tracking-tight text-foreground leading-none">
+                Edu<span className="text-brand-600 dark:text-brand-400">Pulse</span>
               </span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#990033] dark:text-[#ff6685] mt-1">
-                Secondary School
+              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-0.5">
+                LMS Platform
               </span>
             </div>
           </Link>
@@ -83,7 +82,7 @@ export default function ResetPasswordPage() {
             Set New Password
           </h1>
           <p className="text-xs text-muted-foreground">
-            Choose a secure password for your portal account.
+            Choose a secure password for your EduPulse account.
           </p>
         </div>
 
@@ -116,7 +115,7 @@ export default function ResetPasswordPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-[#003366] text-white hover:bg-[#002a54] font-bold text-xs"
+              className="w-full rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs"
             >
               {loading ? (
                 <>

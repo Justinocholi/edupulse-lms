@@ -194,7 +194,7 @@ export default async function StudentOverviewPage() {
           <div className="flex items-center justify-between border-b border-border/80 pb-3">
             <div>
               <h2 className="font-heading text-lg font-bold text-foreground flex items-center gap-2">
-                <Video className="h-5 w-5 text-[#990033]" />
+                <Video className="h-5 w-5 text-rose-500" />
                 <span>My Cohorts &amp; Live Timetables</span>
               </h2>
               <p className="text-xs text-muted-foreground mt-0.5">
@@ -203,7 +203,7 @@ export default async function StudentOverviewPage() {
             </div>
             <Link
               href="/batches"
-              className="text-xs font-bold text-[#003366] dark:text-[#66b2ff] hover:underline"
+              className="text-xs font-bold text-brand-600 dark:text-brand-400 hover:underline"
             >
               Browse All Batches →
             </Link>
@@ -229,7 +229,7 @@ export default async function StudentOverviewPage() {
                   </div>
                   <h4 className="font-bold text-sm text-foreground line-clamp-1">{batch.title}</h4>
                   <p className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Clock className="h-3 w-3 text-[#990033]" />
+                    <Clock className="h-3 w-3 text-rose-500" />
                     <span>{batch.live_schedule_description || "Saturdays 10:00 AM"}</span>
                   </p>
                 </div>
@@ -240,7 +240,7 @@ export default async function StudentOverviewPage() {
                       href={batch.live_class_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex-1 flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r from-[#990033] to-[#7a0029] text-white py-1.5 text-xs font-bold shadow-sm hover:opacity-95"
+                      className="flex-1 flex items-center justify-center gap-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white py-1.5 text-xs font-bold shadow-sm transition-colors"
                     >
                       <Video className="h-3.5 w-3.5" />
                       <span>Join Live</span>

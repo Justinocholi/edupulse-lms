@@ -14,9 +14,9 @@ import { Button } from "@/components/ui/button";
 import { CertificateLookupForm } from "./certificate-lookup-form";
 
 export const metadata = {
-  title: "Official Certificate Verification Registry | Teacher Home LMS",
+  title: "Official Certificate Verification Registry | EduPulse LMS",
   description:
-    "Verify the authenticity of graduation credentials, diplomas, and course completion certificates issued by Teacher Home Secondary School and EduPulse LMS.",
+    "Verify the authenticity of professional engineering certifications, masterclass credentials, and diplomas issued by EduPulse LMS.",
 };
 
 export default async function CertificatesRegistryPage() {
@@ -25,8 +25,8 @@ export default async function CertificatesRegistryPage() {
   return (
     <div className="container py-12 px-4 md:px-6 space-y-12 max-w-5xl mx-auto">
       {/* 1. Header Banner */}
-      <div className="rounded-3xl border border-[#003366]/20 bg-gradient-to-r from-[#001f3f] via-[#003366] to-[#001f3f] text-white p-8 md:p-12 shadow-xl text-center space-y-4 relative overflow-hidden">
-        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold text-[#66b2ff] border border-white/10">
+      <div className="rounded-3xl border border-amber-500/20 bg-gradient-to-r from-brand-950 via-slate-900 to-amber-950 text-white p-8 md:p-12 shadow-xl text-center space-y-4 relative overflow-hidden">
+        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold text-amber-300 border border-white/10">
           <ShieldCheck className="h-4 w-4" />
           <span>Frappe LMS Standard Credential Verification</span>
         </div>
@@ -36,7 +36,7 @@ export default async function CertificatesRegistryPage() {
         </h1>
 
         <p className="text-sm md:text-base text-white/80 max-w-2xl mx-auto leading-relaxed">
-          Every certificate issued by Teacher Home Secondary School is cryptographically logged on our immutable academic registry with a unique tamper-evident verification code.
+          Every certificate issued by EduPulse Academy is cryptographically logged on our immutable academic registry with a unique tamper-evident verification code.
         </p>
 
         {/* Verification Lookup Input */}
@@ -55,31 +55,31 @@ export default async function CertificatesRegistryPage() {
             Tamper-Proof Verification
           </h3>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Unique sequential hashes prevent credential falsification. Employers and universities can verify grades in real time.
+            Unique sequential hashes prevent credential falsification. Employers and technical recruiters can verify curriculum mastery in real time.
           </p>
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-6 space-y-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#003366]/10 text-[#003366] dark:text-[#66b2ff]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
             <Award className="h-5 w-5" />
           </div>
           <h3 className="font-heading font-bold text-sm text-foreground">
-            Institutional Accreditation
+            Academic Rigor &amp; Distinction
           </h3>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Issued under Teacher Home Secondary School, Peace Community, Lokoja, Kogi State with verified instructor signatures.
+            Issued exclusively upon completing all laboratory assignments and passing server-graded comprehensive assessments with distinction.
           </p>
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-6 space-y-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#990033]/10 text-[#990033]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500/10 text-brand-600 dark:text-brand-400">
             <Lock className="h-5 w-5" />
           </div>
           <h3 className="font-heading font-bold text-sm text-foreground">
-            Permanent Digital Record
+            Permanent Digital Ledger
           </h3>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Certificates remain online indefinitely for lifetime portfolio sharing, LinkedIn accreditation, and academic verification.
+            Credentials remain accessible online indefinitely for lifetime portfolio sharing, LinkedIn accreditation, and technical background checks.
           </p>
         </div>
       </div>
@@ -103,7 +103,7 @@ export default async function CertificatesRegistryPage() {
                 className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 hover:bg-muted/30 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#003366]/10 text-[#003366] dark:text-[#66b2ff] font-bold">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">
                     <Award className="h-5 w-5" />
                   </div>
                   <div className="flex flex-col text-xs">
